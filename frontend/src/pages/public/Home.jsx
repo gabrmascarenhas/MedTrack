@@ -117,7 +117,7 @@ export default function Home() {
   const { user } = useAuth();
   const [active, setActive] = useState(0);
   useEffect(() => {
-    document.title = 'MedTrack · O cuidado começa antes da consulta';
+    document.title = 'MedTrack';
   }, []);
   const stage = stages[active];
   return (
