@@ -96,6 +96,32 @@ flowchart LR
 
 Os status das consultas são `Solicitada`, `Aceito`, `Remarcação solicitada`, `Concluída` e `Cancelada`. O banco possui um índice único para impedir duas consultas aceitas com o mesmo médico, dia e horário.
 
+### Reagendamento proposto pelo médico
+
+Em uma consulta aceita, o médico pode abrir **Detalhes → Reagendar consulta** e propor
+outra data e hora, com motivo opcional. O paciente recebe um aviso dentro do MedTrack,
+abre **Ver reagendamento** e escolhe **Aceitar novo horário** ou **Recusar reagendamento**.
+O médico também vê o resultado no aplicativo. Os avisos são carregados junto das consultas,
+ao abrir a área, atualizar, voltar à janela ou na atualização automática de 30 segundos;
+não há envio de e-mail, WhatsApp ou push.
+
+O horário confirmado permanece reservado até o aceite. A proposta fica em
+`rescheduleProposal`, sem criar um novo status da consulta. Na recusa, o horário é mantido.
+A proposta não reserva o novo horário: se ele for ocupado antes do aceite, a API retorna 409
+e o paciente pode recusar para que o médico envie outra opção.
+Enquanto houver uma proposta pendente, não é permitido concluir a consulta ou abrir outra
+remarcação; ainda é possível cancelá-la. Cada proposta tem um ID, e a resposta é atômica,
+impedindo que uma resposta repetida ou antiga sobrescreva o horário.
+
+- `POST /api/appointments/:id/reschedule`: médico vinculado ou admin envia `{ date, time, note }`.
+- `PATCH /api/appointments/:id/reschedule`: paciente vinculado ou admin responde
+  `{ proposalId, decision: "accept" | "reject" }`.
+
+O teste `backend/test/reschedule.test.js` cobre permissões, recusa, aceite, conflitos de
+horário, proposta antiga, resposta concorrente e cancelamento. Execute com `MONGODB_URI_TEST`
+apontando exclusivamente para um banco `medtrack_test`, usando `npm test` dentro de backend.
+
+
 ## Estrutura do projeto
 
 ```text
@@ -173,7 +199,7 @@ MONGODB_URI=mongodb+srv://USUARIO:SENHA@SEU_CLUSTER.mongodb.net/medtrack
 Inicie a API:
 
 ```bash
-npm run serve
+npm run server
 ```
 
 A API estará em `http://127.0.0.1:3000`. A rota `/api/health` retorna `{"ok":true,"db":"mongodb"}` quando a conexão necessária é estabelecida. Para reiniciar automaticamente ao alterar arquivos, existe também `npm run dev`.
@@ -206,7 +232,7 @@ Abra `http://127.0.0.1:5173`. Mantenha os dois terminais abertos enquanto estive
 
 | Pasta | Comando | Finalidade |
 | --- | --- | --- |
-| `backend` | `npm run serve` | Iniciar a API local |
+| `backend` | `npm run server` | Iniciar a API local |
 | `backend` | `npm run dev` | Iniciar a API com reinício automático |
 | `backend` | `npm test` | Executar o teste existente, se o banco de testes estiver configurado |
 | `frontend` | `npm run dev` | Iniciar o Vite |

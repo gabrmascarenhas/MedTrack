@@ -38,7 +38,7 @@ Use um usuário exclusivo da aplicação, com readWrite apenas no banco usado pe
 - /api/*: Express. Aguarda a conexão ao MongoDB e evita cache das respostas.
 - Demais endereços: frontend React.
 - O fallback de SPA permite atualizar diretamente /login, /cadastro e as áreas autenticadas.
-- O backend local continua usando npm run serve dentro de backend.
+- O backend local continua usando npm run server dentro de backend.
 - O frontend local continua usando npm run dev dentro de frontend.
 
 ## Atualizações e verificação

@@ -58,6 +58,21 @@ const AppointmentSchema = new Schema(
       enum: ['Solicitada', 'Aceito', 'Remarcação solicitada', 'Concluída', 'Cancelada'],
       default: 'Solicitada',
     },
+    rescheduleProposal: {
+      type: new Schema(
+        {
+          id: { type: String, required: true },
+          date: { type: String, required: true },
+          time: { type: String, required: true },
+          note: { type: String, maxlength: 1000, default: '' },
+          status: { type: String, enum: ['pending', 'accepted', 'rejected'], required: true },
+          createdAt: { type: Date, required: true },
+          respondedAt: { type: Date, default: null },
+        },
+        { _id: false },
+      ),
+      default: null,
+    },
     requestedDate: { type: String, default: null },
     requestedTime: { type: String, default: null },
     rescheduleNote: { type: String, default: '' },

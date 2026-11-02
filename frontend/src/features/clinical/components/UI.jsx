@@ -58,6 +58,9 @@ export function AppointmentRow({ a, role, onView }) {
         </small>
       </div>
       <Status a={a} />
+      {a.status === 'Aceito' && a.rescheduleProposal?.status === 'pending' && (
+        <small className="d-block">Reagendamento aguardando paciente</small>
+      )}
       <button className="btn" onClick={() => onView(a)}>
         Ver
       </button>
@@ -158,6 +161,9 @@ export function AppointmentTable({ appts, role, onView }) {
               <td>{schedule(a)}</td>
               <td>
                 <Status a={a} />
+                {a.status === 'Aceito' && a.rescheduleProposal?.status === 'pending' && (
+                  <small className="d-block">Reagendamento aguardando paciente</small>
+                )}
               </td>
               <td>
                 <button className="btn" onClick={() => onView(a)}>

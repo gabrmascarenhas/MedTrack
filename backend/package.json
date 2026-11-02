@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/server.js",
-    "serve": "node src/server.js",
+    "server": "node src/server.js",
     "test": "node --test"
   },
   "dependencies": {

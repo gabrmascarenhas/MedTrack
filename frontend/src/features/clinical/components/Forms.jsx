@@ -215,3 +215,60 @@ export function RescheduleForm({ appt, onSave, onCancel, busy }) {
     </form>
   );
 }
+
+export function DoctorRescheduleForm({ appt, onSave, onCancel, busy }) {
+  const [date, setDate] = useState(appt.date || '');
+  const [time, setTime] = useState(appt.time || '');
+  const [note, setNote] = useState('');
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSave({ date, time, note });
+      }}
+    >
+      <div className="notice" role="note">
+        O paciente receberá um aviso no MedTrack e poderá aceitar ou recusar. O horário atual (
+        {dateBR(appt.date)} · {appt.time}) continua confirmado até o aceite. O novo horário será
+        confirmado somente se ainda estiver disponível.
+      </div>
+      <div className="form-grid">
+        <Field label="Nova data *">
+          <input
+            type="date"
+            min={today()}
+            value={date}
+            onChange={(event) => setDate(event.target.value)}
+            required
+          />
+        </Field>
+        <Field label="Novo horário *">
+          <input
+            type="time"
+            value={time}
+            onChange={(event) => setTime(event.target.value)}
+            required
+          />
+        </Field>
+        <Field label="Motivo do reagendamento (opcional)" full>
+          <textarea
+            maxLength={1000}
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+          />
+        </Field>
+      </div>
+      <Actions>
+        <button type="button" className="btn" disabled={busy} onClick={onCancel}>
+          Voltar
+        </button>
+        <button
+          className="btn primary"
+          disabled={busy || !date || !time || (date === appt.date && time === appt.time)}
+        >
+          Enviar proposta ao paciente
+        </button>
+      </Actions>
+    </form>
+  );
+}

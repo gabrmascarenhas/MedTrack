@@ -3,7 +3,13 @@ import { Alert } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { useClinical } from './ClinicalContext';
 import { Modal, Status, PrepSummary, Empty, Actions, Field } from './components/UI';
-import { RequestForm, EditPrepForm, ScheduleForm, RescheduleForm } from './components/Forms';
+import {
+  RequestForm,
+  EditPrepForm,
+  ScheduleForm,
+  RescheduleForm,
+  DoctorRescheduleForm,
+} from './components/Forms';
 import { dateBR, whenBR, schedule, isPending } from './lib/api';
 
 function AdminRequest({ data, busy, onSave, onCancel }) {
@@ -33,7 +39,7 @@ export default function ClinicalModal() {
   const { pathname } = useLocation();
   const { data, modal, setModal, error, busy, mutate, view } = useClinical();
   if (!modal || !data) return null;
-  const a = modal.appt,
+  const a = data.appts.find((item) => item.id === modal.appt?.id) || modal.appt,
     doctor = pathname.startsWith('/medico'),
     admin = data.user.role === 'admin';
   const close = () => {
@@ -61,6 +67,17 @@ export default function ClinicalModal() {
       admin ? <AdminRequest data={data} {...props} /> : <RequestForm {...props} />,
     );
   }
+  if (modal.kind === 'doctorReschedule')
+    return shell(
+      'Propor reagendamento',
+      <DoctorRescheduleForm
+        key={a.id}
+        appt={a}
+        busy={busy}
+        onCancel={() => view(a)}
+        onSave={(payload) => mutate(`/api/appointments/${a.id}/reschedule`, 'POST', payload, true)}
+      />,
+    );
   if (modal.kind === 'editPrep')
     return shell(
       'Editar preparação pré-consulta',
@@ -151,6 +168,30 @@ export default function ClinicalModal() {
           <p className="pre-wrap">{a.rescheduleNote}</p>
         </div>
       )}
+      {a.status === 'Aceito' && a.rescheduleProposal && (
+        <div className="notice" role="status">
+          <strong>
+            {a.rescheduleProposal.status === 'pending'
+              ? 'Reagendamento aguardando resposta do paciente'
+              : a.rescheduleProposal.status === 'accepted'
+                ? 'Reagendamento aceito pelo paciente'
+                : 'Reagendamento recusado pelo paciente'}
+          </strong>
+          <p>
+            Horário proposto: {dateBR(a.rescheduleProposal.date)} · {a.rescheduleProposal.time}
+          </p>
+          {a.rescheduleProposal.note && <p className="pre-wrap">{a.rescheduleProposal.note}</p>}
+          {a.rescheduleProposal.status === 'pending' && (
+            <p>
+              O horário atual continua confirmado até o aceite. O paciente pode aceitar ou recusar
+              abaixo.
+            </p>
+          )}
+          {a.rescheduleProposal.status === 'rejected' && (
+            <p>O horário anterior foi mantido. O médico pode enviar uma nova proposta.</p>
+          )}
+        </div>
+      )}
       <div className="clinical-summary">
         <PrepSummary prep={a.prep} name={a.patient} />
       </div>
@@ -169,26 +210,75 @@ export default function ClinicalModal() {
               : 'Aceitar e definir horário'}
           </button>
         )}
-        {(doctor || admin) && a.status === 'Aceito' && (
-          <button
-            className="btn primary"
-            disabled={busy}
-            onClick={() =>
-              mutate(`/api/appointments/${a.id}`, 'PATCH', { status: 'Concluída' }, true)
-            }
-          >
-            Concluir consulta
-          </button>
-        )}
-        {(!doctor || admin) && a.status === 'Aceito' && (
-          <button
-            className="btn soft"
-            disabled={busy}
-            onClick={() => setModal({ kind: 'reschedule', appt: a })}
-          >
-            Solicitar outro dia/horário
-          </button>
-        )}
+        {(doctor || admin) &&
+          a.status === 'Aceito' &&
+          a.rescheduleProposal?.status !== 'pending' && (
+            <button
+              className="btn soft"
+              disabled={busy}
+              onClick={() => setModal({ kind: 'doctorReschedule', appt: a })}
+            >
+              Reagendar consulta
+            </button>
+          )}
+        {(!doctor || admin) &&
+          a.status === 'Aceito' &&
+          a.rescheduleProposal?.status === 'pending' && (
+            <>
+              <button
+                className="btn primary"
+                disabled={busy}
+                onClick={() =>
+                  mutate(
+                    `/api/appointments/${a.id}/reschedule`,
+                    'PATCH',
+                    { decision: 'accept', proposalId: a.rescheduleProposal.id },
+                    true,
+                  )
+                }
+              >
+                Aceitar novo horário
+              </button>
+              <button
+                className="btn"
+                disabled={busy}
+                onClick={() =>
+                  mutate(
+                    `/api/appointments/${a.id}/reschedule`,
+                    'PATCH',
+                    { decision: 'reject', proposalId: a.rescheduleProposal.id },
+                    true,
+                  )
+                }
+              >
+                Recusar reagendamento
+              </button>
+            </>
+          )}
+        {(doctor || admin) &&
+          a.status === 'Aceito' &&
+          a.rescheduleProposal?.status !== 'pending' && (
+            <button
+              className="btn primary"
+              disabled={busy}
+              onClick={() =>
+                mutate(`/api/appointments/${a.id}`, 'PATCH', { status: 'Concluída' }, true)
+              }
+            >
+              Concluir consulta
+            </button>
+          )}
+        {(!doctor || admin) &&
+          a.status === 'Aceito' &&
+          a.rescheduleProposal?.status !== 'pending' && (
+            <button
+              className="btn soft"
+              disabled={busy}
+              onClick={() => setModal({ kind: 'reschedule', appt: a })}
+            >
+              Solicitar outro dia/horário
+            </button>
+          )}
         {(!doctor || admin) && a.prep && !['Concluída', 'Cancelada'].includes(a.status) && (
           <button
             className="btn"

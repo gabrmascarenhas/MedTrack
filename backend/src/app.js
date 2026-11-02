@@ -327,6 +327,94 @@ async function ownedAppointment(req) {
   if (!ownsRecord(req.user, owner)) fail(403, 'Você não tem acesso a esta consulta.');
   return a;
 }
+// O horário atual continua reservado até o paciente aceitar a proposta.
+app.post(
+  '/api/appointments/:id/reschedule',
+  role('doctor'),
+  wrap(async (req, res) => {
+    const a = await ownedAppointment(req);
+    if (a.status !== 'Aceito')
+      fail(409, 'Somente consultas aceitas podem receber uma proposta de reagendamento.');
+    if (a.rescheduleProposal?.status === 'pending')
+      fail(409, 'Aguarde o paciente responder à proposta atual.');
+    const { date, time } = req.body;
+    validSlot(date, time);
+    if (date === a.date && time === a.time) fail(400, 'Escolha um horário diferente do atual.');
+    if (
+      await Appointment.exists({
+        _id: { $ne: a._id },
+        doctorId: a.doctorId,
+        date,
+        time,
+        status: 'Aceito',
+      })
+    )
+      fail(409, 'Este profissional já possui uma consulta aceita nesse horário.');
+    const proposal = {
+      id: crypto.randomUUID(),
+      date,
+      time,
+      note: optional(req.body.note, 1000, 'Observação'),
+      status: 'pending',
+      createdAt: new Date(),
+    };
+    const updated = await Appointment.findOneAndUpdate(
+      {
+        _id: a._id,
+        status: 'Aceito',
+        date: a.date,
+        time: a.time,
+        'rescheduleProposal.status': { $ne: 'pending' },
+      },
+      { $set: { rescheduleProposal: proposal } },
+      { new: true, runValidators: true },
+    );
+    if (!updated) fail(409, 'A consulta mudou. Atualize os dados antes de continuar.');
+    res
+      .status(201)
+      .json({ appointment: appointmentDTO(await withNames(Appointment.findById(a._id)).lean()) });
+  }),
+);
+app.patch(
+  '/api/appointments/:id/reschedule',
+  role('patient'),
+  wrap(async (req, res) => {
+    const a = await ownedAppointment(req);
+    const proposal = a.rescheduleProposal;
+    const { decision, proposalId } = req.body;
+    if (!['accept', 'reject'].includes(decision))
+      fail(400, 'Escolha aceitar ou recusar o reagendamento.');
+    if (
+      a.status !== 'Aceito' ||
+      !proposal ||
+      proposal.status !== 'pending' ||
+      proposal.id !== proposalId
+    )
+      fail(409, 'Esta proposta não está mais disponível. Atualize os dados.');
+    const changes = {
+      'rescheduleProposal.status': decision === 'accept' ? 'accepted' : 'rejected',
+      'rescheduleProposal.respondedAt': new Date(),
+    };
+    if (decision === 'accept') {
+      validSlot(proposal.date, proposal.time);
+      changes.date = proposal.date;
+      changes.time = proposal.time;
+    }
+    // Só a primeira resposta da proposta vigente pode alterar o horário.
+    const updated = await Appointment.findOneAndUpdate(
+      {
+        _id: a._id,
+        status: 'Aceito',
+        'rescheduleProposal.id': proposalId,
+        'rescheduleProposal.status': 'pending',
+      },
+      { $set: changes },
+      { new: true, runValidators: true },
+    );
+    if (!updated) fail(409, 'A proposta já foi respondida ou a consulta mudou. Atualize os dados.');
+    res.json({ appointment: appointmentDTO(await withNames(Appointment.findById(a._id)).lean()) });
+  }),
+);
 app.put(
   '/api/appointments/:id/preparation',
   role('patient'),
@@ -345,10 +433,15 @@ app.patch(
   wrap(async (req, res) => {
     const a = await ownedAppointment(req),
       b = req.body;
+    a.$locals.previousStatus = a.status;
+    a.$locals.previousProposalId = a.rescheduleProposal?.id ?? null;
     if (b.status === 'Cancelada') {
       if (['Concluída', 'Cancelada'].includes(a.status)) fail(409, 'Consulta já encerrada.');
       a.status = 'Cancelada';
+      a.rescheduleProposal = null;
     } else if (hasRole(req.user, 'doctor') && b.status === 'Concluída') {
+      if (a.rescheduleProposal?.status === 'pending')
+        fail(409, 'Aguarde a resposta ao reagendamento antes de concluir a consulta.');
       if (a.status !== 'Aceito') fail(409, 'Somente consultas aceitas podem ser concluídas.');
       a.status = 'Concluída';
     } else if (hasRole(req.user, 'doctor') && b.status === 'Aceito') {
@@ -362,6 +455,8 @@ app.patch(
       a.requestedTime = null;
       a.rescheduleNote = '';
     } else if (hasRole(req.user, 'patient') && b.status === 'Remarcação solicitada') {
+      if (a.rescheduleProposal?.status === 'pending')
+        fail(409, 'Aceite ou recuse a proposta do médico antes de pedir outro horário.');
       if (a.status !== 'Aceito') fail(409, 'Só é possível remarcar consultas aceitas.');
       const d = b.requestedDate ? required(b.requestedDate, 10, 'Data') : null,
         t = b.requestedTime ? required(b.requestedTime, 5, 'Horário') : null;
@@ -371,10 +466,15 @@ app.patch(
         fail(400, 'A data desejada deve ser válida e futura.');
       if (t && !validTime(t)) fail(400, 'Horário desejado inválido.');
       a.status = 'Remarcação solicitada';
+      a.rescheduleProposal = null;
       a.requestedDate = d;
       a.requestedTime = t;
       a.rescheduleNote = note;
     } else fail(403, 'Ação indisponível para este perfil ou status.');
+    a.$where = {
+      status: a.$locals.previousStatus,
+      'rescheduleProposal.id': a.$locals.previousProposalId,
+    };
     await a.save();
     res.json({ appointment: appointmentDTO(await withNames(Appointment.findById(a._id)).lean()) });
   }),
@@ -478,16 +578,20 @@ if (process.env.SERVE_FRONTEND === 'true') {
 }
 app.use((err, req, res, next) => {
   const status =
-    err.status || (err.code === 11000 ? 409 : err.name === 'ValidationError' ? 400 : 500);
+    (err.name === 'DocumentNotFoundError' ? 409 : null) ||
+    err.status ||
+    (err.code === 11000 ? 409 : err.name === 'ValidationError' ? 400 : 500);
   if (status === 500) console.error('[MedTrack]', err);
   const message =
     err.code === 11000
       ? err.keyPattern?.email
         ? 'E-mail já cadastrado.'
         : 'Este profissional já possui uma consulta aceita nesse horário.'
-      : status === 500
-        ? 'Erro interno no servidor.'
-        : err.message;
+      : err.name === 'DocumentNotFoundError'
+        ? 'A consulta mudou. Atualize os dados antes de continuar.'
+        : status === 500
+          ? 'Erro interno no servidor.'
+          : err.message;
   res.status(status).json({ error: message });
 });
 export default app;

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useMockAuth } from '../../services/authService';
 import { useClinical } from './ClinicalContext';
 import Dashboard from './pages/Dashboard';
+import { dateBR } from './lib/api';
 import Calendar from './pages/Calendar';
 import { Appointments, Preparation, Summaries, Followup, Patients, Notes } from './pages/Pages';
 
@@ -89,6 +90,33 @@ export default function ClinicalPage({ page = 'dashboard', perspective = 'patien
           Visão administrativa: os registros exibidos incluem todos os usuários.
         </Alert>
       )}
+      {data.appts
+        .filter(
+          (a) =>
+            a.status === 'Aceito' &&
+            a.rescheduleProposal &&
+            (perspective === 'patient' ? a.rescheduleProposal.status === 'pending' : true),
+        )
+        .map((a) => (
+          <Alert
+            key={a.id}
+            variant={a.rescheduleProposal.status === 'pending' ? 'warning' : 'info'}
+            role="status"
+          >
+            <strong>
+              {a.rescheduleProposal.status === 'pending'
+                ? perspective === 'patient'
+                  ? `${a.doctor} propôs reagendar sua consulta.`
+                  : `${a.patient}: aguardando resposta ao reagendamento.`
+                : `${a.patient} ${a.rescheduleProposal.status === 'accepted' ? 'aceitou' : 'recusou'} o reagendamento.`}
+            </strong>{' '}
+            Horário proposto: {dateBR(a.rescheduleProposal.date)} · {a.rescheduleProposal.time}.{' '}
+            {a.rescheduleProposal.status !== 'accepted' && 'O horário atual foi mantido. '}
+            <Button variant="link" disabled={busy} onClick={() => view(a)}>
+              Ver reagendamento
+            </Button>
+          </Alert>
+        ))}
       <div className="clinical-sync">
         <span>Atualização automática a cada 30 segundos</span>
         <button

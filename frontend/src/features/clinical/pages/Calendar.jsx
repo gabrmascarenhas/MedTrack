@@ -33,7 +33,11 @@ export default function Calendar({ data, view }) {
   const days = monthDays(month.getFullYear(), month.getMonth());
   const label = month.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
   const selectedRows = grouped[selected] || [];
-  const pending = filtered.filter(isPending);
+  const pending = filtered.filter(
+    (item) =>
+      isPending(item) ||
+      (item.status === 'Aceito' && item.rescheduleProposal?.status === 'pending'),
+  );
   function changeMonth(offset) {
     const next = new Date(month.getFullYear(), month.getMonth() + offset, 1, 12);
     setMonth(next);
@@ -108,7 +112,9 @@ export default function Calendar({ data, view }) {
                   {days.slice(week * 7, week * 7 + 7).map((date, index) => {
                     if (!date) return <td key={`empty-${index}`} aria-hidden="true" />;
                     const records = grouped[date] || [];
-                    const hasPending = records.some(isPending);
+                    const hasPending = records.some(
+                      (item) => isPending(item) || item.rescheduleProposal?.status === 'pending',
+                    );
                     const completed =
                       records.length > 0 && records.every((item) => item.status === 'Concluída');
                     const status = hasPending ? 'reschedule' : completed ? 'completed' : 'booked';

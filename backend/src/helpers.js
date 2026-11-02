@@ -85,6 +85,7 @@ export function appointmentDTO(a) {
     time: a.time,
     reason: a.reason,
     status: a.status,
+    rescheduleProposal: a.rescheduleProposal || null,
     requestedDate: a.requestedDate,
     requestedTime: a.requestedTime,
     rescheduleNote: a.rescheduleNote,
