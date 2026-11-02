@@ -1,0 +1,93 @@
+// Design tokens do MedTrack. Todo valor visual nasce aqui; os demais arquivos só consomem.
+@use 'sass:color';
+
+// Atkinson Hyperlegible foi desenhada pelo Braille Institute para leitura com baixa visão:
+// letras ambíguas (I/l/1, O/0) são distintas, o que ajuda pacientes lendo nomes de remédios e doses.
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;500&family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap');
+
+// ---------- Cor: paleta "Petróleo clínico" (definitiva, definida pela equipe) ----------
+$color-bg: #f7f6f3;
+$color-surface: #ffffff;
+$color-border: #e4e1da;
+$color-text: #1c2430;
+$color-text-secondary: #5b6472;
+$color-primary: #0f5c5c;
+$color-primary-soft: #e3efee;
+$color-success: #2f7d4f;
+$color-warning: #b7791f;
+$color-danger: #b4442c;
+$color-info: #3a6a8c;
+
+// Estados derivados (nunca cores novas: sempre tint/shade dos valores acima)
+@function tint($c, $w) {
+  @return color.mix(#fff, $c, $w);
+}
+@function shade($c, $w) {
+  @return color.mix(#000, $c, $w);
+}
+
+$color-primary-hover: shade($color-primary, 15%);
+$color-primary-active: shade($color-primary, 28%);
+$color-border-strong: color.mix($color-text, $color-border, 18%);
+$color-focus: $color-primary;
+
+// Fundo claro + texto escurecido para badges/alertas. O warning puro tem contraste 3.6:1
+// em branco, por isso o texto dele é escurecido mais que os outros para passar no AA (4.5:1).
+$semantic-soft-weight: 88%;
+$semantic-text-shade: (
+  'success': 20%,
+  'warning': 38%,
+  'danger': 15%,
+  'info': 15%,
+);
+
+// ---------- Tipografia ----------
+$font-sans: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif;
+$font-mono: 'Atkinson Hyperlegible Mono', ui-monospace, 'Cascadia Mono', monospace;
+
+// Escala fixa em rem, razão ~1.2 (UI de produto não usa tipografia fluida)
+$type-xs: 0.8125rem; // 13px
+$type-sm: 0.875rem; // 14px
+$type-base: 1rem; // 16px
+$type-md: 1.125rem; // 18px
+$type-lg: 1.375rem; // 22px
+$type-xl: 1.75rem; // 28px
+
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+$weight-bold: 700;
+
+$leading-tight: 1.25;
+$leading-base: 1.55;
+$tracking-heading: -0.01em;
+$measure: 68ch;
+
+// ---------- Espaçamento (base 4px) ----------
+$space-1: 0.25rem; // 4
+$space-2: 0.5rem; // 8
+$space-3: 0.75rem; // 12
+$space-4: 1rem; // 16
+$space-5: 1.5rem; // 24
+$space-6: 2rem; // 32
+$space-7: 3rem; // 48
+$space-8: 4rem; // 64
+
+// ---------- Forma ----------
+$radius-sm: 4px;
+$radius-md: 6px;
+$radius-lg: 8px;
+
+// Sombras: só para camadas que flutuam (offcanvas, dropdown). Superfícies usam borda.
+$shadow-overlay: 0 4px 8px rgba($color-text, 0.08);
+
+// ---------- Movimento ----------
+$duration-fast: 150ms;
+$duration-base: 200ms;
+$ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+
+// ---------- Layout ----------
+$sidebar-width: 15.5rem;
+$content-max-width: 72rem;
+$focus-width: 2px;
+$focus-offset: 2px;

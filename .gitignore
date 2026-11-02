@@ -1,0 +1,13 @@
+# Dependências e arquivos gerados
+node_modules/
+dist/
+
+# Configurações locais e credenciais
+.env
+.env.*
+!.env.example
+.vercel/
+
+# Arquivos locais do sistema e logs
+.DS_Store
+*.log

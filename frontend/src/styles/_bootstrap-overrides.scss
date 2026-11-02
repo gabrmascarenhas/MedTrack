@@ -1,0 +1,123 @@
+@use 'sass:color';
+
+// Traduz os tokens para as variáveis do Bootstrap. Precisa vir ANTES do import do Bootstrap,
+// porque ele declara tudo com !default: só usa o valor dele se o nosso ainda não existir.
+
+// Cores nomeadas: o Bootstrap as expõe como --bs-blue etc. Apontam para a paleta para não vazar o azul padrão.
+$blue: $color-info;
+$cyan: $color-info;
+$teal: $color-primary;
+$green: $color-success;
+$yellow: $color-warning;
+$red: $color-danger;
+
+// Cores de tema
+$primary: $color-primary;
+$secondary: $color-text-secondary;
+$success: $color-success;
+$info: $color-info;
+$warning: $color-warning;
+$danger: $color-danger;
+$light: $color-bg;
+$dark: $color-text;
+
+// A escala de cinzas padrão do Bootstrap aparece em textos desabilitados, bordas e afins.
+// Ela é regerada misturando nossas cores de texto e fundo, para não vazar o cinza azulado default.
+$gray-100: color.mix($color-text, $color-bg, 3%);
+$gray-200: $color-border;
+$gray-300: $color-border-strong;
+$gray-400: color.mix($color-text, $color-bg, 35%);
+$gray-500: color.mix($color-text, $color-bg, 50%);
+$gray-600: $color-text-secondary;
+$gray-700: color.mix($color-text, $color-bg, 80%);
+$gray-800: color.mix($color-text, $color-bg, 90%);
+$gray-900: $color-text;
+
+// Corpo
+$body-bg: $color-bg;
+$body-color: $color-text;
+$body-secondary-color: $color-text-secondary;
+$body-tertiary-bg: $color-bg;
+$border-color: $color-border;
+$link-color: $color-primary;
+$link-hover-color: $color-primary-hover;
+$link-decoration: underline;
+$link-underline-offset: 0.2em;
+
+// Tipografia
+$font-family-sans-serif: $font-sans;
+$font-family-monospace: $font-mono;
+$font-size-base: $type-base;
+$font-size-sm: $type-sm;
+$font-size-lg: $type-md;
+$line-height-base: $leading-base;
+$headings-font-weight: $weight-semibold;
+$headings-line-height: $leading-tight;
+$headings-color: $color-text;
+$h1-font-size: $type-xl;
+$h2-font-size: $type-lg;
+$h3-font-size: $type-md;
+$h4-font-size: $type-base;
+$h5-font-size: $type-base;
+$h6-font-size: $type-sm;
+$small-font-size: $type-sm;
+$form-label-font-weight: $weight-semibold;
+
+// Espaçamento: utilitários p-*/m-*/gap-* seguem a escala de 4/8px
+$spacer: $space-4;
+$spacers: (
+  0: 0,
+  1: $space-1,
+  2: $space-2,
+  3: $space-3,
+  4: $space-4,
+  5: $space-5,
+  6: $space-6,
+  7: $space-7,
+  8: $space-8,
+);
+
+// Forma
+$border-radius: $radius-md;
+$border-radius-sm: $radius-sm;
+$border-radius-lg: $radius-lg;
+$border-radius-xl: $radius-lg;
+$border-radius-xxl: $radius-lg;
+$border-radius-pill: $radius-lg;
+$enable-shadows: false;
+$box-shadow: $shadow-overlay;
+$box-shadow-sm: none;
+$box-shadow-lg: $shadow-overlay;
+
+// Foco: anel sólido na cor primária em vez do halo azul translúcido padrão
+$focus-ring-width: $focus-width;
+$focus-ring-color: rgba($color-primary, 0.35);
+$input-focus-border-color: $color-primary;
+$input-btn-focus-color: rgba($color-primary, 0.35);
+
+// Componentes
+$btn-font-weight: $weight-semibold;
+$btn-padding-y: $space-2;
+$btn-padding-x: $space-4;
+$btn-transition:
+  color $duration-fast $ease-out,
+  background-color $duration-fast $ease-out,
+  border-color $duration-fast $ease-out;
+$input-bg: $color-surface;
+$input-border-color: $color-border-strong;
+$input-placeholder-color: $color-text-secondary;
+$input-padding-y: $space-2;
+$input-padding-x: $space-3;
+$card-border-color: $color-border;
+$card-bg: $color-surface;
+$offcanvas-bg-color: $color-surface;
+$offcanvas-backdrop-bg: $color-text;
+$offcanvas-backdrop-opacity: 0.4;
+$offcanvas-horizontal-width: min(20rem, 85vw);
+$offcanvas-border-color: $color-border;
+$offcanvas-box-shadow: $shadow-overlay;
+$alert-border-radius: $radius-md;
+$alert-bg-scale: -88%;
+$alert-border-scale: -70%;
+$alert-color-scale: 35%;
+$transition-base: all $duration-base $ease-out;

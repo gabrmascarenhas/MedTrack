@@ -1,0 +1,500 @@
+@use 'sass:list';
+@use 'sass:map';
+
+// Ordem importa: tokens → overrides → Bootstrap (que respeita os !default já definidos) → estilos próprios.
+@import 'tokens';
+@import 'bootstrap-overrides';
+@import 'bootstrap/scss/bootstrap';
+
+// ---------- Base ----------
+body {
+  font-feature-settings: 'tnum' 1; // algarismos de largura fixa: datas e doses alinham em listas
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: $tracking-heading;
+  text-wrap: balance;
+}
+
+p {
+  max-width: $measure;
+  text-wrap: pretty;
+}
+
+.font-mono {
+  font-family: $font-mono;
+}
+
+// Foco sempre visível e consistente, inclusive em elementos que o Bootstrap trata com box-shadow
+:focus-visible {
+  outline: $focus-width solid $color-focus;
+  outline-offset: $focus-offset;
+}
+
+.btn:focus-visible,
+.form-control:focus-visible,
+.btn-close:focus-visible {
+  outline: $focus-width solid $color-focus;
+  outline-offset: $focus-offset;
+  box-shadow: none;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+}
+
+.skip-link {
+  position: absolute;
+  top: $space-2;
+  left: $space-2;
+  z-index: $zindex-toast;
+  padding: $space-2 $space-4;
+  background: $color-primary;
+  color: $color-surface;
+  font-weight: $weight-semibold;
+  border-radius: $radius-md;
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
+    color: $color-surface;
+  }
+}
+
+// ---------- Marca ----------
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  color: $color-text;
+  font-weight: $weight-bold;
+  font-size: $type-md;
+  text-decoration: none;
+
+  &__mark {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: $radius-md;
+    background: $color-primary;
+    color: $color-surface;
+  }
+}
+
+// ---------- Shell autenticado ----------
+.app-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: $sidebar-width;
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  padding: $space-5 $space-4;
+  overflow-y: auto;
+  background: $color-surface;
+  border-right: 1px solid $color-border;
+}
+
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: $zindex-sticky;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  padding: $space-2 $space-4;
+  background: $color-surface;
+  border-bottom: 1px solid $color-border;
+}
+
+.app-main {
+  padding: $space-5 $space-4 $space-7;
+
+  &:focus {
+    outline: none; // recebe foco via skip link; o anel aqui só confundiria
+  }
+
+  @include media-breakpoint-up(lg) {
+    margin-left: $sidebar-width;
+    padding: $space-6 $space-7 $space-8;
+  }
+}
+
+.app-content {
+  max-width: $content-max-width;
+}
+
+// ---------- Navegação ----------
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-2 $space-3;
+    border: 1px solid transparent;
+    border-radius: $radius-md;
+    color: $color-text-secondary;
+    font-weight: $weight-medium;
+    text-decoration: none;
+    transition:
+      background-color $duration-fast $ease-out,
+      color $duration-fast $ease-out;
+
+    &:hover {
+      background: $color-bg;
+      color: $color-text;
+    }
+
+    // Ativo: fundo + borda + peso + ícone preenchido. Não depende só da cor.
+    &.active {
+      background: $color-primary-soft;
+      border-color: rgba($color-primary, 0.25);
+      color: $color-primary;
+      font-weight: $weight-bold;
+
+      svg {
+        stroke-width: 2.5;
+      }
+    }
+  }
+}
+
+.user-block {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  margin-top: auto;
+  padding-top: $space-4;
+  border-top: 1px solid $color-border;
+
+  &__name {
+    font-weight: $weight-semibold;
+    line-height: $leading-tight;
+  }
+
+  &__meta {
+    font-size: $type-sm;
+    color: $color-text-secondary;
+  }
+}
+
+// O Offcanvas recebe foco programático ao abrir (para o leitor de tela); o contêiner não é
+// interativo, então o anel ficaria parecendo uma borda solta. O foco segue visível nos controles.
+.offcanvas:focus-visible {
+  outline: none;
+}
+
+.offcanvas .offcanvas-body {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+// ---------- PageHeader ----------
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $space-4;
+  margin-bottom: $space-6;
+  padding-bottom: $space-5;
+  border-bottom: 1px solid $color-border;
+
+  &__title {
+    margin: 0;
+  }
+
+  &__description {
+    margin: $space-2 0 0;
+    color: $color-text-secondary;
+  }
+}
+
+// ---------- Painéis e ficha ----------
+.panel {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-5;
+
+  &__title {
+    font-size: $type-md;
+    margin-bottom: $space-4;
+  }
+}
+
+// Ficha de dados no estilo de um prontuário: rótulo pequeno em cima, valor embaixo
+.data-sheet {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: $space-4 $space-5;
+  margin: 0;
+
+  dt {
+    font-size: $type-xs;
+    font-weight: $weight-semibold;
+    color: $color-text-secondary;
+  }
+
+  dd {
+    margin: $space-1 0 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+// ---------- EmptyState ----------
+.empty-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: $space-4;
+  padding: $space-6 $space-5;
+  border: 1px dashed $color-border-strong;
+  border-radius: $radius-lg;
+  background: $color-surface;
+
+  &__icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: $radius-md;
+    background: $color-primary-soft;
+    color: $color-primary;
+  }
+
+  &__body {
+    flex: 1 1 16rem;
+  }
+
+  &__title {
+    font-size: $type-md;
+    margin-bottom: $space-2;
+  }
+
+  &__text {
+    margin-bottom: 0;
+    color: $color-text-secondary;
+  }
+
+  &__action {
+    margin-top: $space-4;
+  }
+}
+
+// ---------- LoadingState ----------
+.loading-state--page {
+  max-width: 32rem;
+  padding: $space-7 $space-5;
+}
+
+.skeleton {
+  width: 90%;
+
+  &:nth-child(3n + 2) {
+    width: 60%;
+  }
+
+  &:nth-child(3n + 1) {
+    width: 75%;
+  }
+
+  display: block;
+  height: 0.875rem;
+  border-radius: $radius-sm;
+  background: $color-border;
+  animation: skeleton-pulse 1.4s $ease-out infinite alternate;
+
+  & + & {
+    margin-top: $space-3;
+  }
+}
+
+@keyframes skeleton-pulse {
+  to {
+    opacity: 0.45;
+  }
+}
+
+// ---------- StatusBadge ----------
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: 0.125rem $space-2;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+  font-size: $type-sm;
+  font-weight: $weight-semibold;
+  line-height: 1.4;
+  white-space: nowrap;
+
+  &--preparada {
+    background: $color-primary-soft;
+    border-color: rgba($color-primary, 0.3);
+    color: $color-primary;
+  }
+}
+
+$status-semantic: (
+  'agendada': (
+    'info',
+    $color-info,
+  ),
+  'realizada': (
+    'success',
+    $color-success,
+  ),
+  'cancelada': (
+    'danger',
+    $color-danger,
+  ),
+);
+
+@each $status, $pair in $status-semantic {
+  $role: list.nth($pair, 1);
+  $base: list.nth($pair, 2);
+
+  .status-badge--#{$status} {
+    background: tint($base, $semantic-soft-weight);
+    border-color: tint($base, 60%);
+    color: shade($base, map.get($semantic-text-shade, $role));
+  }
+}
+
+// ---------- Etapas (sequência real do fluxo de consulta) ----------
+.steps {
+  display: grid;
+  gap: $space-4;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+
+  @include media-breakpoint-up(md) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &__item {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: $space-1 $space-3;
+    align-items: baseline;
+    align-content: start;
+
+    &::before {
+      content: counter(step);
+      grid-row: span 2;
+      display: grid;
+      place-items: center;
+      width: 1.75rem;
+      height: 1.75rem;
+      border: 1px solid $color-border-strong;
+      border-radius: 50%;
+      font-family: $font-mono;
+      font-size: $type-sm;
+      color: $color-text-secondary;
+    }
+  }
+
+  &__title {
+    font-weight: $weight-semibold;
+  }
+
+  &__text {
+    grid-column: 2;
+    margin: 0;
+    font-size: $type-sm;
+    color: $color-text-secondary;
+  }
+}
+
+// ---------- Área pública ----------
+.public-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    padding: $space-4;
+    border-bottom: 1px solid $color-border;
+    background: $color-surface;
+
+    @include media-breakpoint-up(lg) {
+      padding: $space-4 $space-7;
+    }
+  }
+
+  &__main {
+    flex: 1;
+    padding: $space-6 $space-4 $space-7;
+
+    &:focus {
+      outline: none;
+    }
+
+    @include media-breakpoint-up(lg) {
+      padding: $space-8 $space-7;
+    }
+  }
+}
+
+.login-grid {
+  display: grid;
+  gap: $space-7;
+  max-width: $content-max-width;
+
+  @include media-breakpoint-up(lg) {
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    gap: $space-8;
+  }
+}
+
+.login-aside {
+  @include media-breakpoint-up(lg) {
+    padding-left: $space-7;
+    border-left: 1px solid $color-border;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+.demo-access {
+  margin-top: $space-5;
+  padding-top: $space-5;
+  border-top: 1px solid $color-border;
+}
+
+@import 'home';
+
+// ---------- Movimento reduzido ----------
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
