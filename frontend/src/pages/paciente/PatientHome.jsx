@@ -1,33 +1,15 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import PageHeader from '../../components/ui/PageHeader';
 import { formatBirthDate, genderLabel } from '../../services/profile';
-import ConsultationFlow from '../../components/ConsultationFlow';
+import ClinicalPage from '../../features/clinical/ClinicalPage';
 
 export default function PatientHome() {
   const { user } = useAuth();
-  const firstName = user.nome.split(' ')[0];
 
   return (
     <>
-      <PageHeader
-        title={`Olá, ${firstName}`}
-        description="Aqui você prepara suas consultas e acompanha as orientações depois delas."
-        actions={
-          <Link to="/paciente/consultas" className="btn btn-primary">
-            Ver minhas consultas
-          </Link>
-        }
-      />
-
-      <div className="d-grid gap-5">
-        <section className="panel" aria-labelledby="flow-title">
-          <h2 id="flow-title" className="panel__title">
-            Como cada consulta avança
-          </h2>
-          <ConsultationFlow />
-        </section>
-
+      <ClinicalPage perspective="patient" />
+      <div className="d-grid gap-5 mt-5">
         <section className="panel" aria-labelledby="data-title">
           <h2 id="data-title" className="panel__title">
             Seus dados

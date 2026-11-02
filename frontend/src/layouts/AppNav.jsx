@@ -9,16 +9,25 @@ const NAV_BY_ROLE = {
     { to: '/admin', label: 'Administração', icon: House, end: true },
     { to: '/paciente', label: 'Área do paciente', icon: House, end: true },
     { to: '/paciente/consultas', label: 'Consultas', icon: ClipboardList },
+    { to: '/paciente/preparacao', label: 'Preparações', icon: ClipboardList },
+    { to: '/paciente/acompanhamento', label: 'Pós-consulta', icon: CalendarDays },
     { to: '/medico', label: 'Área do médico', icon: House, end: true },
     { to: '/medico/agenda', label: 'Agenda', icon: CalendarDays },
+    { to: '/medico/pacientes', label: 'Pacientes', icon: ClipboardList },
+    { to: '/medico/orientacoes', label: 'Orientações médicas', icon: ClipboardList },
   ],
   paciente: [
     { to: '/paciente', label: 'Início', icon: House, end: true },
     { to: '/paciente/consultas', label: 'Minhas consultas', icon: ClipboardList },
+    { to: '/paciente/preparacao', label: 'Preparação pré-consulta', icon: ClipboardList },
+    { to: '/paciente/resumos', label: 'Resumos', icon: ClipboardList },
+    { to: '/paciente/acompanhamento', label: 'Pós-consulta', icon: CalendarDays },
   ],
   medico: [
     { to: '/medico', label: 'Início', icon: House, end: true },
     { to: '/medico/agenda', label: 'Agenda', icon: CalendarDays },
+    { to: '/medico/pacientes', label: 'Pacientes', icon: ClipboardList },
+    { to: '/medico/orientacoes', label: 'Orientações médicas', icon: ClipboardList },
   ],
 };
 

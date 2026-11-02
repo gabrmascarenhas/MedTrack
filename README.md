@@ -4,7 +4,7 @@ Projeto acadêmico da disciplina de Desenvolvimento Web para organizar informaç
 
 A proposta é permitir que o paciente prepare suas dúvidas e sintomas antes do atendimento, que o médico tenha acesso a esse contexto e que as orientações e o acompanhamento fiquem disponíveis após a consulta.
 
-O sistema está em desenvolvimento. Cadastro, autenticação, edição de perfil e administração básica já estão integrados ao MongoDB Atlas. O fluxo de consultas possui rotas no back-end, mas ainda precisa ser conectado às telas de paciente e médico.
+O sistema está em desenvolvimento. Cadastro, autenticação, edição de perfil e administração básica já estão integrados ao MongoDB Atlas. As telas de consultas, agenda, preparação, resumos e pós-consulta estão conectadas às rotas do back-end. O fluxo completo ainda precisa de validação no ambiente de homologação.
 
 > O MedTrack não realiza diagnósticos, não sugere tratamentos e não substitui a avaliação de um profissional de saúde.
 
@@ -20,13 +20,16 @@ O sistema está em desenvolvimento. Cadastro, autenticação, edição de perfil
 | Especialidade, CRM e UF para médicos | Integrado à API e ao banco |
 | Administrador: listar usuários e editar nome/e-mail | Implementado |
 | Acesso administrativo às áreas de paciente e médico | Implementado |
-| Consultas: criação, preparação, aceite, remarcação, cancelamento e exclusão | Rotas no back-end; integração com as telas pendente |
-| Resumo do paciente, orientações e acompanhamento | Rotas no back-end; integração com as telas pendente |
-| Pesquisa e filtros nas telas | Pendente |
+| Consultas: criação, preparação, aceite, remarcação, cancelamento e exclusão | Rotas e telas integradas; validação completa pendente |
+| Resumo do paciente, orientações e acompanhamento | Rotas e telas integradas; validação completa pendente |
+| Busca textual de consultas e pacientes | Implementada na interface |
+| Filtros específicos de data/status e busca na administração | Pendente |
 | Hospedagem na Vercel com MongoDB Atlas | Publicada; atualização vinculada à branch de produção |
 | Testes com Postman e Playwright | Planejados; ainda sem coleção ou configuração no repositório |
 
-As páginas **Minhas consultas** e **Agenda** ainda exibem estados vazios fixos. Portanto, a existência das rotas da API não significa que esses fluxos já possam ser realizados pela interface.
+As páginas **Minhas consultas** e **Agenda** carregam dados de `/api/bootstrap`. Os painéis iniciais mostram contadores, próximas consultas e solicitações pendentes. A interface atualiza os dados após as ações, ao retornar à janela e a cada 30 segundos enquanto a área clínica está ativa e a aba está visível.
+
+Os componentes clínicos e o design da área interna foram recuperados de uma versão anterior do MedTrack e adaptados à autenticação, ao cadastro e à navegação atuais. A homepage pública foi preservada. Foram feitas conferências de interface com dados fictícios em memória; isso não substitui a validação ponta a ponta com o back-end e o Atlas.
 
 A interface foi construída com layouts responsivos, mas a validação completa de usabilidade ainda está pendente.
 
@@ -247,9 +250,8 @@ As dependências são recuperadas por `npm ci`, a partir dos arquivos `package.j
 
 ## Próximas entregas
 
-- Integrar as telas de consultas e agenda às rotas reais, com criação, listagem, edição e exclusão conforme as regras do sistema.
-- Tornar próximas consultas e solicitações pendentes visíveis nas páginas iniciais.
-- Conectar preparação, resumo, orientações e acompanhamento à interface.
+- Validar ponta a ponta as telas clínicas integradas, incluindo criação, edição, remarcação, cancelamento, exclusão, orientações e acompanhamento.
+- Conferir as permissões de paciente, médico e administrador e os estados de erro, conflito e carregamento.
 - Implementar pesquisa e filtros por médico, data, status e perfil, conforme a tela.
 - Preparar e executar testes de API, de navegador e de usabilidade, registrando resultados e problemas encontrados.
 - Atualizar os requisitos, casos de uso, modelo de dados, wireframes, cronograma e relatório para refletir a implementação entregue.

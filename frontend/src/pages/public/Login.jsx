@@ -79,166 +79,169 @@ export default function Login() {
   const errorProps = error ? { 'aria-describedby': 'login-error', 'aria-invalid': true } : {};
 
   return (
-    <div className="login-grid">
-      <section aria-labelledby="login-title">
-        <h1 id="login-title">{creating ? 'Criar conta' : 'Entrar'}</h1>
-        <p className="text-body-secondary mb-5">
-          {creating
-            ? profile === 'doctor'
-              ? 'Crie seu perfil de médico parceiro.'
-              : 'Crie seu perfil e comece sua jornada no MedTrack.'
-            : 'Use o e-mail e a senha da sua conta.'}
-        </p>
-
-        {error && (
-          <Alert variant="danger" role="alert" id="login-error">
-            {error}
-          </Alert>
-        )}
-
-        <Form onSubmit={handleSubmit}>
-          {creating && (
-            <>
-              <Form.Group className="mb-4" controlId="register-name">
-                <Form.Label>Nome</Form.Label>
-                <Form.Control
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mb-4" controlId="register-role">
-                <Form.Label>Perfil</Form.Label>
-                <Form.Select
-                  value={profile}
-                  onChange={(e) => {
-                    setProfile(e.target.value);
-                    navigate(`/cadastro?perfil=${e.target.value}`, { replace: true });
-                  }}
-                >
-                  <option value="patient">Paciente</option>
-                  <option value="doctor">Médico</option>
-                </Form.Select>
-              </Form.Group>
-              <ProfileFields
-                value={details}
-                onChange={setDetails}
-                professional={profile === 'doctor'}
-                prefix="register"
-                disabled={submitting}
-              />
-            </>
-          )}
-          <Form.Group className="mb-4" controlId="login-email">
-            <Form.Label>E-mail</Form.Label>
-            <Form.Control
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              {...errorProps}
-            />
-          </Form.Group>
-          <PasswordField
-            key={creating ? 'register-password' : 'login-password'}
-            id="login-senha"
-            label="Senha"
-            autoComplete={creating ? 'new-password' : 'current-password'}
-            minLength={creating ? 8 : undefined}
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            disabled={submitting}
-            errorProps={errorProps}
-          />
-          {creating && (
-            <PasswordField
-              id="register-confirmation"
-              label="Confirmar senha"
-              autoComplete="new-password"
-              minLength={8}
-              value={confirmation}
-              onChange={(e) => setConfirmation(e.target.value)}
-              disabled={submitting}
-              errorProps={errorProps}
-            />
-          )}
-          <Button type="submit" variant="primary" disabled={submitting} className="w-100">
-            {submitting && <Spinner size="sm" aria-hidden="true" />}
-            {submitting ? 'Aguarde…' : creating ? 'Criar conta' : 'Entrar'}
-          </Button>
-        </Form>
-
-        {!useMockAuth && (
-          <Button
-            variant="link"
-            disabled={submitting}
-            onClick={() => {
-              navigate(creating ? '/login' : '/cadastro');
-              setSenha('');
-              setConfirmation('');
-              setError('');
-            }}
-          >
-            {creating ? 'Já tenho conta' : 'Criar uma conta'}
-          </Button>
-        )}
-        {useMockAuth && (
-          <div className="demo-access">
-            <h2 className="h4 mb-1">Acesso de demonstração</h2>
-            <p className="text-body-secondary small mb-3">
-              Entre com uma conta fictícia para conhecer cada perfil.
-            </p>
-            <div className="d-flex flex-wrap gap-2">
-              <Button
-                variant="outline-primary"
-                disabled={submitting}
-                onClick={() => signIn(demoCredentials.paciente)}
-              >
-                <UserRound size={18} aria-hidden="true" />
-                Entrar como paciente demo
-              </Button>
-              <Button
-                variant="outline-primary"
-                disabled={submitting}
-                onClick={() => signIn(demoCredentials.medico)}
-              >
-                <Stethoscope size={18} aria-hidden="true" />
-                Entrar como médico demo
-              </Button>
+    <div className="recovered-ui recovered-login">
+      <div className="login-screen">
+        <section className="login-story">
+          <div className="brand">
+            <div className="brand-mark">✚</div>
+            <div>
+              MedTrack<small>CUIDADO CONTÍNUO</small>
             </div>
           </div>
-        )}
-      </section>
+          <div className="story-copy">
+            <span className="story-tag">
+              <span className="dot" />
+              Saúde conectada, com mais clareza
+            </span>
+            <h2>
+              Uma consulta
+              <br />
+              melhor começa
+              <br />
+              <em>antes dela.</em>
+            </h2>
+            <p>
+              Organize suas dúvidas, compartilhe o que importa e acompanhe os próximos passos com
+              mais tranquilidade.
+            </p>
+          </div>
+          <div className="story-bottom">
+            <span />
+            Preparar · Organizar · Comunicar · Acompanhar
+          </div>
+        </section>
+        <section className="login-panel" aria-labelledby="login-title">
+          <div className="login-card">
+            <h1 id="login-title">{creating ? 'Criar conta' : 'Entrar'}</h1>
+            <p className="text-body-secondary mb-5">
+              {creating
+                ? profile === 'doctor'
+                  ? 'Crie seu perfil de médico parceiro.'
+                  : 'Crie seu perfil e comece sua jornada no MedTrack.'
+                : 'Use o e-mail e a senha da sua conta.'}
+            </p>
 
-      <aside className="login-aside" aria-labelledby="about-title">
-        <h2 id="about-title" className="mb-3">
-          Sua consulta, organizada antes e depois
-        </h2>
-        <p className="text-body-secondary mb-5">
-          O MedTrack reúne o que você quer contar ao médico e guarda as orientações que recebeu. Ele
-          organiza informações: não faz diagnósticos nem substitui a avaliação médica.
-        </p>
-        <ol className="steps">
-          <li className="steps__item">
-            <span className="steps__title">Antes</span>
-            <p className="steps__text">
-              Você anota motivo, sintomas, dúvidas e medicamentos em uso.
-            </p>
-          </li>
-          <li className="steps__item">
-            <span className="steps__title">Na consulta</span>
-            <p className="steps__text">
-              O médico recebe um resumo organizado do que você registrou.
-            </p>
-          </li>
-          <li className="steps__item">
-            <span className="steps__title">Depois</span>
-            <p className="steps__text">
-              Orientações, medicamentos e data de retorno ficam num só lugar.
-            </p>
-          </li>
-        </ol>
-      </aside>
+            {error && (
+              <Alert variant="danger" role="alert" id="login-error">
+                {error}
+              </Alert>
+            )}
+
+            <Form onSubmit={handleSubmit}>
+              {creating && (
+                <>
+                  <Form.Group className="mb-4" controlId="register-name">
+                    <Form.Label>Nome</Form.Label>
+                    <Form.Control
+                      autoComplete="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-4" controlId="register-role">
+                    <Form.Label>Perfil</Form.Label>
+                    <Form.Select
+                      value={profile}
+                      onChange={(e) => {
+                        setProfile(e.target.value);
+                        navigate(`/cadastro?perfil=${e.target.value}`, { replace: true });
+                      }}
+                    >
+                      <option value="patient">Paciente</option>
+                      <option value="doctor">Médico</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <ProfileFields
+                    value={details}
+                    onChange={setDetails}
+                    professional={profile === 'doctor'}
+                    prefix="register"
+                    disabled={submitting}
+                  />
+                </>
+              )}
+              <Form.Group className="mb-4" controlId="login-email">
+                <Form.Label>E-mail</Form.Label>
+                <Form.Control
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  {...errorProps}
+                />
+              </Form.Group>
+              <PasswordField
+                key={creating ? 'register-password' : 'login-password'}
+                id="login-senha"
+                label="Senha"
+                autoComplete={creating ? 'new-password' : 'current-password'}
+                minLength={creating ? 8 : undefined}
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                disabled={submitting}
+                errorProps={errorProps}
+              />
+              {creating && (
+                <PasswordField
+                  id="register-confirmation"
+                  label="Confirmar senha"
+                  autoComplete="new-password"
+                  minLength={8}
+                  value={confirmation}
+                  onChange={(e) => setConfirmation(e.target.value)}
+                  disabled={submitting}
+                  errorProps={errorProps}
+                />
+              )}
+              <Button type="submit" variant="primary" disabled={submitting} className="w-100">
+                {submitting && <Spinner size="sm" aria-hidden="true" />}
+                {submitting ? 'Aguarde…' : creating ? 'Criar conta' : 'Entrar'}
+              </Button>
+            </Form>
+
+            {!useMockAuth && (
+              <Button
+                variant="link"
+                disabled={submitting}
+                onClick={() => {
+                  navigate(creating ? '/login' : '/cadastro');
+                  setSenha('');
+                  setConfirmation('');
+                  setError('');
+                }}
+              >
+                {creating ? 'Já tenho conta' : 'Criar uma conta'}
+              </Button>
+            )}
+            {useMockAuth && (
+              <div className="demo-access">
+                <h2 className="h4 mb-1">Acesso de demonstração</h2>
+                <p className="text-body-secondary small mb-3">
+                  Entre com uma conta fictícia para conhecer cada perfil.
+                </p>
+                <div className="d-flex flex-wrap gap-2">
+                  <Button
+                    variant="outline-primary"
+                    disabled={submitting}
+                    onClick={() => signIn(demoCredentials.paciente)}
+                  >
+                    <UserRound size={18} aria-hidden="true" />
+                    Entrar como paciente demo
+                  </Button>
+                  <Button
+                    variant="outline-primary"
+                    disabled={submitting}
+                    onClick={() => signIn(demoCredentials.medico)}
+                  >
+                    <Stethoscope size={18} aria-hidden="true" />
+                    Entrar como médico demo
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>{' '}
+      </div>
     </div>
   );
 }
