@@ -198,10 +198,7 @@ app.patch(
 app.get(
   '/api/doctors',
   wrap(async (req, res) => {
-    const doctors = await User.find({ role: { $in: ['doctor', 'admin'] } })
-      .select('name')
-      .sort('name')
-      .lean();
+    const doctors = await User.find({ role: 'doctor' }).select('name').sort('name').lean();
     res.json({ doctors: doctors.map((d) => ({ id: String(d._id), name: d.name })) });
   }),
 );
@@ -218,10 +215,7 @@ async function overview(user) {
           : { [user.role === 'doctor' ? 'doctorId' : 'patientId']: user._id },
       ).sort({ createdAt: -1 }),
     ).lean(),
-    User.find({ role: { $in: ['doctor', 'admin'] } })
-      .select('name')
-      .sort('name')
-      .lean(),
+    User.find({ role: 'doctor' }).select('name').sort('name').lean(),
   ]);
   const rank = {
     'Solicitada': 0,
@@ -304,7 +298,7 @@ app.post(
   role('patient'),
   wrap(async (req, res) => {
     const doctorId = objectId(req.body.doctorId, 'Médico');
-    if (!(await User.exists({ _id: doctorId, role: { $in: ['doctor', 'admin'] } })))
+    if (!(await User.exists({ _id: doctorId, role: 'doctor' })))
       fail(400, 'Escolha um profissional cadastrado.');
     const prep = prepFields(req.body.preparation);
     const patientId =

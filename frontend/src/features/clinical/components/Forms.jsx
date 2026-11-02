@@ -56,6 +56,12 @@ export function RequestForm({ doctors, onSave, onCancel, busy }) {
         A preparação será enviada ao médico junto com o pedido. A data e o horário serão definidos
         por ele.
       </div>
+      {!doctors.length && (
+        <p className="notice" role="status">
+          Ainda não há médicos disponíveis para receber solicitações. Contas administrativas não
+          aparecem como profissionais.
+        </p>
+      )}
       <Field label="Profissional *">
         <select value={doctorId} onChange={(e) => setDoctorId(e.target.value)} required>
           <option value="">Escolha um médico cadastrado</option>

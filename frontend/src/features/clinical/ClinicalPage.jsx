@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useMockAuth } from '../../services/authService';
 import { useClinical } from './ClinicalContext';
 import Dashboard from './pages/Dashboard';
+import Calendar from './pages/Calendar';
 import { Appointments, Preparation, Summaries, Followup, Patients, Notes } from './pages/Pages';
 
 export default function ClinicalPage({ page = 'dashboard', perspective = 'patient' }) {
@@ -101,7 +102,8 @@ export default function ClinicalPage({ page = 'dashboard', perspective = 'patien
       {page === 'dashboard' && (
         <Dashboard {...props} go={(key) => navigate(paths[key] || paths.dashboard)} />
       )}
-      {page === 'appointments' && <Appointments {...props} />}
+      {page === 'appointments' &&
+        (perspective === 'doctor' ? <Calendar {...props} /> : <Appointments {...props} />)}
       {page === 'preparation' && (
         <Preparation
           {...props}

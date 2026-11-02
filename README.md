@@ -22,6 +22,7 @@ O sistema está em desenvolvimento. Cadastro, autenticação, edição de perfil
 | Acesso administrativo às áreas de paciente e médico | Implementado |
 | Consultas: criação, preparação, aceite, remarcação, cancelamento e exclusão | Rotas e telas integradas; validação completa pendente |
 | Resumo do paciente, orientações e acompanhamento | Rotas e telas integradas; validação completa pendente |
+| Calendário mensal na agenda médica, com consultas por dia e status | Implementado |
 | Busca textual de consultas e pacientes | Implementada na interface |
 | Filtros específicos de data/status e busca na administração | Pendente |
 | Hospedagem na Vercel com MongoDB Atlas | Publicada; atualização vinculada à branch de produção |
@@ -38,6 +39,8 @@ A interface foi construída com layouts responsivos, mas a validação completa 
 - **Paciente (`patient`):** possui área própria e edição de cadastro. As rotas clínicas permitem solicitar consultas, enviar preparação e registrar acompanhamentos, conforme suas permissões e vínculos.
 - **Médico (`doctor`):** possui área própria e cadastro profissional. As rotas clínicas permitem administrar consultas vinculadas, consultar resumos e registrar orientações.
 - **Administrador (`admin`):** pode acessar as duas áreas e gerenciar nome/e-mail dos usuários. O back-end também permite acesso administrativo aos registros clínicos, mantendo as regras de status das consultas.
+
+Somente contas com perfil `doctor` aparecem na seleção de profissionais e podem receber novas solicitações como médico. Administradores mantêm suas permissões de gestão, mas não são listados como profissionais.
 
 O cadastro público permite apenas paciente e médico. O perfil administrativo não é oferecido no formulário e não existe um comando de promoção no repositório atual.
 

@@ -1547,3 +1547,164 @@
 .clinical-drawer .offcanvas-title {
   color: #eff8f4;
 }
+
+.recovered-ui .clinical-calendar-search {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.recovered-ui .clinical-calendar-search label {
+  font-size: 12px;
+  font-weight: 700;
+}
+.recovered-ui .clinical-calendar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.recovered-ui .clinical-calendar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.recovered-ui .clinical-calendar-toolbar h2 {
+  text-transform: capitalize;
+  margin: 0;
+}
+.recovered-ui .clinical-calendar-toolbar > div {
+  display: flex;
+  gap: 6px;
+}
+.recovered-ui .clinical-calendar-grid {
+  table-layout: fixed;
+  width: 100%;
+}
+.recovered-ui .clinical-calendar-grid th,
+.recovered-ui .clinical-calendar-grid td {
+  padding: 3px;
+  text-align: center;
+  white-space: normal;
+  border: 0;
+}
+.recovered-ui .clinical-calendar-grid th {
+  font-size: 11px;
+  background: transparent;
+  padding-bottom: 10px;
+}
+.recovered-ui .clinical-calendar-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 62px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink);
+  font-weight: 600;
+}
+.recovered-ui .clinical-calendar-day:hover {
+  border-color: var(--teal);
+  background: var(--mint2);
+}
+.recovered-ui .clinical-calendar-day[aria-current='date'] > span:first-child {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.recovered-ui .clinical-calendar-day.has-appointments.booked {
+  background: #d9f4df;
+  color: #20733a;
+}
+.recovered-ui .clinical-calendar-day.has-appointments.reschedule {
+  background: #fff2d5;
+  color: #805600;
+}
+.recovered-ui .clinical-calendar-day.has-appointments.completed {
+  background: #e7edf4;
+  color: #39566e;
+}
+.recovered-ui .clinical-calendar-day.is-selected {
+  border: 2px solid var(--deep);
+  box-shadow: inset 0 0 0 1px white;
+}
+.recovered-ui .clinical-calendar-count {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  font-size: 10px;
+}
+.recovered-ui .clinical-calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 18px 0 10px;
+  font-size: 11px;
+}
+.recovered-ui .clinical-calendar-legend > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.recovered-ui .clinical-calendar-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  border: 1px solid #0002;
+}
+.recovered-ui .clinical-calendar-legend .booked {
+  background: #d9f4df;
+}
+.recovered-ui .clinical-calendar-legend .reschedule {
+  background: #fff2d5;
+}
+.recovered-ui .clinical-calendar-legend .completed {
+  background: #e7edf4;
+}
+.recovered-ui .clinical-calendar-date {
+  font-size: 13px;
+  color: var(--muted);
+  text-transform: capitalize;
+}
+.recovered-ui .clinical-calendar-pending,
+.recovered-ui .clinical-calendar-history {
+  margin-top: 18px;
+}
+.recovered-ui .clinical-calendar-history summary {
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+@media (max-width: 1100px) {
+  .recovered-ui .clinical-calendar-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 450px) {
+  .recovered-ui .clinical-calendar-day {
+    min-height: 48px;
+    border-radius: 7px;
+  }
+  .recovered-ui .clinical-calendar-grid th,
+  .recovered-ui .clinical-calendar-grid td {
+    padding: 2px;
+  }
+  .recovered-ui .clinical-calendar-toolbar .btn {
+    padding: 8px 10px;
+  }
+  .recovered-ui .clinical-calendar-search {
+    justify-content: flex-start;
+  }
+  .recovered-ui .clinical-calendar-search .search {
+    width: 100%;
+  }
+}
