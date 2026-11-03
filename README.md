@@ -294,3 +294,22 @@ As dependências são recuperadas por `npm ci`, a partir dos arquivos `package.j
 | Pedro Átila | Front-end |
 | Fernando José | Back-end |
 | Gabriel Mascarenhas | QA / Análise de Testes |
+
+
+## Acesso rápido aos testes
+
+- [Postman — coleção exportada](medtracktests.json).
+- [Playwright — cópia para consulta](medtracktests.spec.js).
+- [Postman — coleção automatizada e relatório XML](tests/postman/).
+- [Playwright — arquivo executável original](frontend/tests/example.spec.js).
+
+A cópia na raiz facilita a consulta; execute e mantenha o arquivo original em
+`frontend/tests/example.spec.js`. Para executar, deixe a API e o frontend locais ligados e,
+dentro de `frontend`, use `npx playwright test example.spec.js --project=chromium --workers=1`.
+Os testes criam dados fictícios no banco configurado no backend.
+
+A exportação `medtracktests.json` inclui requisições manuais de login cujas credenciais
+foram substituídas por variáveis `qaEmailPaciente`, `qaSenhaPaciente`, `qaEmailMedico`,
+`qaSenhaMedico`, `qaEmailAdmin` e `qaSenhaAdmin`. Preencha esses valores somente no seu
+ambiente local do Postman. A coleção de 15 cenários em `tests/postman` gera suas próprias
+contas fictícias e deve ser executada inteira, na ordem, com o ambiente local fornecido.

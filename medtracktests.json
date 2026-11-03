@@ -1,0 +1,2164 @@
+{
+  "info": {
+    "_postman_id": "01ee7ba2-cb23-480a-be0e-de46c7019cd5",
+    "name": "MedTrack",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59412934",
+    "_collection_link": "https://go.postman.co/collection/59412934-01ee7ba2-cb23-480a-be0e-de46c7019cd5?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Verificar conexão",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/health",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login Paciente",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{qaEmailPaciente}}\",\n  \"password\": \"{{qaSenhaPaciente}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login Medico",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{qaEmailMedico}}\",\n  \"password\": \"{{qaSenhaMedico}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login Admin",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{qaEmailAdmin}}\",\n  \"password\": \"{{qaSenhaAdmin}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "(admin) Listar Usuários",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/admin/users",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "admin",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "(paciente) Senha Errada",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{qaEmailPaciente}}\",\n  \"password\": \"SenhaIncorretaQA123!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/auth/logout",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Verificar Sessão",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Sem sessão, retorna 401\", function () {\n  pm.response.to.have.status(401);\n});\n\npm.test(\"Explica que é necessário entrar novamente\", function () {\n  pm.expect(pm.response.json().error)\n    .to.eql(\"Sua sessão terminou. Entre novamente.\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3000/api/auth/me",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Iniciar rodada e verificar API",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Banco conectado', () => pm.expect(pm.response.json()).to.eql({ok:true,db:'mongodb'}));"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const runId=pm.variables.replaceIn('{{$guid}}');",
+              "pm.collectionVariables.set('runId',runId);",
+              "for (const role of ['patient','doctor','other']) pm.collectionVariables.set(role+'Email','qa-'+role+'-'+runId+'@example.test');",
+              "pm.collectionVariables.set('day',new Date(Date.now()+7*86400000).toISOString().slice(0,10));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cadastrar paciente fictício",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('patientId',pm.response.json().user.id);",
+              "pm.test('Perfil correto', () => pm.expect(pm.response.json().user.role).to.eql('patient'));",
+              "pm.test('Não expõe senha nem hash', () => { const u=pm.response.json().user; pm.expect(u).not.to.have.property('password'); pm.expect(u).not.to.have.property('passwordHash'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Paciente {{runId}}\",\n  \"email\": \"{{patientEmail}}\",\n  \"password\": \"{{testPassword}}\",\n  \"role\": \"patient\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cadastrar médico fictício com CRM e UF",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('doctorId',pm.response.json().user.id);",
+              "pm.test('Perfil correto', () => pm.expect(pm.response.json().user.role).to.eql('doctor'));",
+              "pm.test('Não expõe senha nem hash', () => { const u=pm.response.json().user; pm.expect(u).not.to.have.property('password'); pm.expect(u).not.to.have.property('passwordHash'); });",
+              "pm.test('Dados profissionais retornados', () => { const u=pm.response.json().user; pm.expect(u.crm).to.eql('999999'); pm.expect(u.crmUf).to.eql('CE'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Médico {{runId}}\",\n  \"email\": \"{{doctorEmail}}\",\n  \"password\": \"{{testPassword}}\",\n  \"role\": \"doctor\",\n  \"specialty\": \"Especialidade fictícia QA\",\n  \"crm\": \"999999\",\n  \"crmUf\": \"CE\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Rejeitar e-mail já cadastrado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 409', () => pm.response.to.have.status(409));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Duplicado\",\n  \"email\": \"{{patientEmail}}\",\n  \"password\": \"{{testPassword}}\",\n  \"role\": \"patient\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Rejeitar e-mail malformado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Inválido\",\n  \"email\": \"invalido\",\n  \"password\": \"{{testPassword}}\",\n  \"role\": \"patient\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Rejeitar senha curta",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Inválido\",\n  \"email\": \"{{qaEmailPaciente}}\",\n  \"password\": \"{{qaSenhaPaciente}}\",\n  \"role\": \"patient\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Rejeitar nascimento no futuro",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Inválido\",\n  \"email\": \"invalid-{{runId}}@example.test\",\n  \"password\": \"{{testPassword}}\",\n  \"role\": \"patient\",\n  \"birthDate\": \"2999-01-01\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Rejeitar CRM sem UF",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Inválido\",\n  \"email\": \"invalid-{{runId}}@example.test\",\n  \"password\": \"{{testPassword}}\",\n  \"role\": \"doctor\",\n  \"crm\": \"12345\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Rejeitar cadastro público de administrador",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Inválido\",\n  \"email\": \"invalid-{{runId}}@example.test\",\n  \"password\": \"{{testPassword}}\",\n  \"role\": \"admin\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Entrar como patient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Perfil autenticado', () => pm.expect(pm.response.json().user.role).to.eql('patient'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{patientEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Atualizar nascimento e gênero inclusivo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Paciente Editado {{runId}}\",\n  \"birthDate\": \"2000-01-15\",\n  \"gender\": \"self_described\",\n  \"genderDescription\": \"Descrição fictícia QA\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/profile",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "profile"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Conferir persistência do perfil",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Dados editados persistiram', () => { const u=pm.response.json().user; pm.expect(u.birthDate).to.eql('2000-01-15'); pm.expect(u.gender).to.eql('self_described'); pm.expect(u.genderDescription).to.eql('Descrição fictícia QA'); pm.expect(u.name).to.eql('QA Paciente Editado '+pm.collectionVariables.get('runId')); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/auth/me",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tentar mudar role pelo próprio perfil",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Permanece paciente', () => pm.expect(pm.response.json().user.role).to.eql('patient'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"role\": \"admin\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/profile",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "profile"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Confirmar role persistida",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Servidor manteve paciente', () => pm.expect(pm.response.json().user.role).to.eql('patient'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/auth/me",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Paciente não lista usuários administrativos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 403', () => pm.response.to.have.status(403));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/users",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar solicitação",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "const a=pm.response.json().appointment; pm.collectionVariables.set('appointmentId',a.id);",
+              "pm.test('Preparação e participantes corretos', () => { pm.expect(a.status).to.eql('Solicitada'); pm.expect(a.doctorId).to.eql(pm.collectionVariables.get('doctorId')); pm.expect(a.patientId).to.eql(pm.collectionVariables.get('patientId')); pm.expect(a.prep.symptoms).to.eql('Contexto fictício para teste automatizado, sem dados clínicos reais.'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"doctorId\": \"{{doctorId}}\",\n  \"preparation\": {\n    \"reason\": \"Solicitação fictícia QA {{runId}}\",\n    \"symptoms\": \"Contexto fictício para teste automatizado, sem dados clínicos reais.\",\n    \"questions\": \"Pergunta fictícia de QA\",\n    \"meds\": \"\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Paciente não aceita a própria solicitação",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 403', () => pm.response.to.have.status(403));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Aceito\",\n  \"date\": \"{{day}}\",\n  \"time\": \"14:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Entrar como doctor",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Perfil autenticado', () => pm.expect(pm.response.json().user.role).to.eql('doctor'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{doctorEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Médico não conclui consulta ainda pendente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 409', () => pm.response.to.have.status(409));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Concluída\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cadastrar segundo paciente fictício",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('otherId',pm.response.json().user.id);",
+              "pm.test('Perfil correto', () => pm.expect(pm.response.json().user.role).to.eql('patient'));",
+              "pm.test('Não expõe senha nem hash', () => { const u=pm.response.json().user; pm.expect(u).not.to.have.property('password'); pm.expect(u).not.to.have.property('passwordHash'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"QA Outro Paciente {{runId}}\",\n  \"email\": \"{{otherEmail}}\",\n  \"password\": \"{{testPassword}}\",\n  \"role\": \"patient\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Outro paciente não cancela consulta",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 403', () => pm.response.to.have.status(403));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Cancelada\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Outro paciente não altera preparação",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 403', () => pm.response.to.have.status(403));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reason\": \"Solicitação fictícia QA {{runId}}\",\n  \"symptoms\": \"Contexto fictício para teste automatizado, sem dados clínicos reais.\",\n  \"questions\": \"Pergunta fictícia de QA\",\n  \"meds\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}/preparation",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}",
+            "preparation"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consulta alheia não aparece nos dados",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Consulta protegida', () => pm.expect(pm.response.json().appts.some(a=>a.id===pm.collectionVariables.get('appointmentId'))).to.eql(false));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/bootstrap",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "bootstrap"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Entrar como doctor",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Perfil autenticado', () => pm.expect(pm.response.json().user.role).to.eql('doctor'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{doctorEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Rejeitar agendamento no passado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Aceito\",\n  \"date\": \"2000-01-01\",\n  \"time\": \"14:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Aceitar consulta para data futura",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Status Aceito', () => pm.expect(pm.response.json().appointment.status).to.eql('Aceito'));",
+              "pm.test('Consulta correta', () => pm.expect(pm.response.json().appointment.id).to.eql(pm.collectionVariables.get('appointmentId')));",
+              "pm.test('Horário registrado', () => { const a=pm.response.json().appointment; pm.expect(a.date).to.eql(pm.collectionVariables.get('day')); pm.expect(a.time).to.eql('14:00'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Aceito\",\n  \"date\": \"{{day}}\",\n  \"time\": \"14:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Entrar como patient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Perfil autenticado', () => pm.expect(pm.response.json().user.role).to.eql('patient'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{patientEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Paciente vê horário aceito",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Aceite persistido e visível ao paciente', () => { const a=pm.response.json().appts.find(a=>a.id===pm.collectionVariables.get('appointmentId')); pm.expect(a).to.include({status:'Aceito',time:'14:00'}); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/bootstrap",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "bootstrap"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Pedir outro horário",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Status Remarcação solicitada', () => pm.expect(pm.response.json().appointment.status).to.eql('Remarcação solicitada'));",
+              "pm.test('Consulta correta', () => pm.expect(pm.response.json().appointment.id).to.eql(pm.collectionVariables.get('appointmentId')));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Remarcação solicitada\",\n  \"requestedTime\": \"16:00\",\n  \"rescheduleNote\": \"Observação fictícia QA\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Entrar como doctor",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Perfil autenticado', () => pm.expect(pm.response.json().user.role).to.eql('doctor'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{doctorEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Definir novo horário",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Status Aceito', () => pm.expect(pm.response.json().appointment.status).to.eql('Aceito'));",
+              "pm.test('Consulta correta', () => pm.expect(pm.response.json().appointment.id).to.eql(pm.collectionVariables.get('appointmentId')));",
+              "pm.test('Novo horário e preferência limpa', () => { const a=pm.response.json().appointment; pm.expect(a.time).to.eql('16:00'); pm.expect(a.requestedTime).to.eql(null); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Aceito\",\n  \"date\": \"{{day}}\",\n  \"time\": \"16:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Salvar orientação fictícia",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"patientId\": \"{{patientId}}\",\n  \"text\": \"Orientação fictícia QA {{runId}}\",\n  \"meds\": \"\",\n  \"returnDate\": \"{{day}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/guidance",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "guidance"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Entrar como patient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Perfil autenticado', () => pm.expect(pm.response.json().user.role).to.eql('patient'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{patientEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Conferir orientação persistida",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Orientação do médico aparece para paciente', () => { const g=pm.response.json().guidance.find(g=>g.text==='Orientação fictícia QA '+pm.collectionVariables.get('runId')); pm.expect(g).to.be.an('object'); pm.expect(g.doctorId).to.eql(pm.collectionVariables.get('doctorId')); pm.expect(g.patientId).to.eql(pm.collectionVariables.get('patientId')); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/bootstrap",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "bootstrap"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Entrar como doctor",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Perfil autenticado', () => pm.expect(pm.response.json().user.role).to.eql('doctor'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{doctorEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Concluir consulta aceita",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Status Concluída', () => pm.expect(pm.response.json().appointment.status).to.eql('Concluída'));",
+              "pm.test('Consulta correta', () => pm.expect(pm.response.json().appointment.id).to.eql(pm.collectionVariables.get('appointmentId')));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Concluída\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Não cancelar consulta concluída",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 409', () => pm.response.to.have.status(409));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Cancelada\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{appointmentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Entrar como patient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Perfil autenticado', () => pm.expect(pm.response.json().user.role).to.eql('patient'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{patientEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Conferir conclusão persistida",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Consulta concluída persistiu', () => pm.expect(pm.response.json().appts.find(a=>a.id===pm.collectionVariables.get('appointmentId')).status).to.eql('Concluída'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/bootstrap",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "bootstrap"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Solicitar consulta destinada ao cancelamento",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('cancelId',pm.response.json().appointment.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"doctorId\": \"{{doctorId}}\",\n  \"preparation\": {\n    \"reason\": \"Solicitação fictícia QA {{runId}}\",\n    \"symptoms\": \"Contexto fictício para teste automatizado, sem dados clínicos reais.\",\n    \"questions\": \"Pergunta fictícia de QA\",\n    \"meds\": \"\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cancelar consulta pendente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Status Cancelada', () => pm.expect(pm.response.json().appointment.status).to.eql('Cancelada'));",
+              "pm.test('Consulta correta', () => pm.expect(pm.response.json().appointment.id).to.eql(pm.collectionVariables.get('cancelId')));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Cancelada\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{cancelId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{cancelId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Não remarcar consulta cancelada",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 409', () => pm.response.to.have.status(409));",
+              "",
+              "pm.test('Resposta de erro descritiva', () => pm.expect(pm.response.json().error).to.be.a('string').and.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Remarcação solicitada\",\n  \"requestedTime\": \"17:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/appointments/{{cancelId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "appointments",
+            "{{cancelId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Conferir cancelamento persistido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Cancelamento persistiu', () => pm.expect(pm.response.json().appts.find(a=>a.id===pm.collectionVariables.get('cancelId')).status).to.eql('Cancelada'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/bootstrap",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "bootstrap"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Encerrar sessão de testes",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/logout",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "runId",
+      "value": ""
+    },
+    {
+      "key": "patientEmail",
+      "value": ""
+    },
+    {
+      "key": "doctorEmail",
+      "value": ""
+    },
+    {
+      "key": "otherEmail",
+      "value": ""
+    },
+    {
+      "key": "day",
+      "value": ""
+    },
+    {
+      "key": "patientId",
+      "value": ""
+    },
+    {
+      "key": "doctorId",
+      "value": ""
+    },
+    {
+      "key": "appointmentId",
+      "value": ""
+    },
+    {
+      "key": "otherId",
+      "value": ""
+    },
+    {
+      "key": "cancelId",
+      "value": ""
+    },
+    {
+      "key": "testPassword",
+      "value": "QA-Ficticio123!",
+      "type": "string"
+    },
+    {
+      "key": "qaEmailPaciente",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "qaSenhaPaciente",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "qaEmailMedico",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "qaSenhaMedico",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "qaEmailAdmin",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "qaSenhaAdmin",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
