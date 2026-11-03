@@ -11,3 +11,9 @@ dist/
 # Arquivos locais do sistema e logs
 .DS_Store
 *.log
+
+# Documentação e evidências mantidas somente no computador
+/DEPLOY.md
+/Relatorio*
+/relatorio*
+/tests/postman/

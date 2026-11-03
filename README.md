@@ -153,7 +153,6 @@ MedTrack/
 │   └── package.json
 ├── .gitignore
 ├── vercel.json
-├── DEPLOY.md
 └── README.md
 ```
 
@@ -263,7 +262,7 @@ A coleção Postman, os testes de navegador com Playwright e o registro de evid�
 
 ## Publicação
 
-O projeto está configurado e publicado na Vercel, com persistência no MongoDB Atlas. As instruções de importação, variáveis e rede estão em [`DEPLOY.md`](DEPLOY.md).
+O projeto está configurado e publicado na Vercel, com persistência no MongoDB Atlas.
 
 - Importe a **raiz do repositório**, mantendo os serviços `web` e `api` declarados em `vercel.json`.
 - Configure `MONGODB_URI` somente no ambiente do servidor e `APP_ORIGIN` com a origem pública do site.
@@ -298,18 +297,16 @@ As dependências são recuperadas por `npm ci`, a partir dos arquivos `package.j
 
 ## Acesso rápido aos testes
 
-- [Postman — coleção exportada](medtracktests.json).
-- [Playwright — cópia para consulta](medtracktests.spec.js).
-- [Postman — coleção automatizada e relatório XML](tests/postman/).
-- [Playwright — arquivo executável original](frontend/tests/example.spec.js).
+Os arquivos estão reunidos na pasta [`medtrack-tests`](medtrack-tests/):
 
-A cópia na raiz facilita a consulta; execute e mantenha o arquivo original em
-`frontend/tests/example.spec.js`. Para executar, deixe a API e o frontend locais ligados e,
-dentro de `frontend`, use `npx playwright test example.spec.js --project=chromium --workers=1`.
-Os testes criam dados fictícios no banco configurado no backend.
+- [MedTrack-Postman.json](medtrack-tests/MedTrack-Postman.json): coleção para importar no Postman.
+- [MedTrack-Playwright.spec.js](medtrack-tests/MedTrack-Playwright.spec.js): cópia dos testes de navegador para consulta.
 
-A exportação `medtracktests.json` inclui requisições manuais de login cujas credenciais
-foram substituídas por variáveis `qaEmailPaciente`, `qaSenhaPaciente`, `qaEmailMedico`,
-`qaSenhaMedico`, `qaEmailAdmin` e `qaSenhaAdmin`. Preencha esses valores somente no seu
-ambiente local do Postman. A coleção de 15 cenários em `tests/postman` gera suas próprias
-contas fictícias e deve ser executada inteira, na ordem, com o ambiente local fornecido.
+A versão executável do Playwright permanece em `frontend/tests/example.spec.js`.
+Dentro de `frontend`, execute `npx playwright test example.spec.js --project=chromium --workers=1`,
+com a API e o frontend locais ligados. Os testes criam dados fictícios no banco configurado.
+
+No Postman, configure `baseUrl` como `http://127.0.0.1:3000/api` no seu ambiente local.
+Os logins manuais usam as variáveis `qaEmailPaciente`, `qaSenhaPaciente`, `qaEmailMedico`,
+`qaSenhaMedico`, `qaEmailAdmin` e `qaSenhaAdmin`. Preencha credenciais somente localmente.
+Os cenários automatizados devem ser executados na ordem para preparar IDs e sessões.
