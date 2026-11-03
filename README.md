@@ -1,186 +1,119 @@
 # MedTrack
 
-Projeto acadêmico da disciplina de Desenvolvimento Web para organizar informações e aproximar pacientes e profissionais de saúde antes, durante e depois da consulta.
+Aplicação web para organizar a preparação de consultas médicas e o acompanhamento após o atendimento. Pacientes registram sintomas e dúvidas, médicos gerenciam consultas e orientações, e ambos acompanham as informações em uma plataforma integrada.
 
-A proposta é permitir que o paciente prepare suas dúvidas e sintomas antes do atendimento, que o médico tenha acesso a esse contexto e que as orientações e o acompanhamento fiquem disponíveis após a consulta.
+**Status:** projeto acadêmico concluído · Desenvolvimento Web · Universidade de Fortaleza — UNIFOR.
 
-O sistema está em desenvolvimento. Cadastro, autenticação, edição de perfil e administração básica já estão integrados ao MongoDB Atlas. As telas de consultas, agenda, preparação, resumos e pós-consulta estão conectadas às rotas do back-end. O fluxo completo ainda precisa de validação no ambiente de homologação.
+[Acessar o MedTrack](https://medtrackapp.vercel.app) · [Testes automatizados](medtrack-tests/)
 
-> O MedTrack não realiza diagnósticos, não sugere tratamentos e não substitui a avaliação de um profissional de saúde.
+## Funcionalidades
 
-## Estado atual
+### Pacientes
 
-| Funcionalidade | Situação |
-| --- | --- |
-| Homepage pública e cadastro direcionado por perfil | Implementado |
-| Cadastro de paciente e médico | Integrado à API e ao banco |
-| Login, logout e sessão por cookie HTTP-only | Implementado |
-| Confirmação de senha e mostrar/ocultar senha | Implementado na interface |
-| Edição de nome, e-mail, nascimento e gênero | Integrado à API e ao banco |
-| Especialidade, CRM e UF para médicos | Integrado à API e ao banco |
-| Administrador: listar usuários e editar nome/e-mail | Implementado |
-| Acesso administrativo às áreas de paciente e médico | Implementado |
-| Consultas: criação, preparação, aceite, remarcação, cancelamento e exclusão | Rotas e telas integradas; validação completa pendente |
-| Resumo do paciente, orientações e acompanhamento | Rotas e telas integradas; validação completa pendente |
-| Calendário mensal na agenda médica, com consultas por dia e status | Implementado |
-| Busca textual de consultas e pacientes | Implementada na interface |
-| Filtros específicos de data/status e busca na administração | Pendente |
-| Hospedagem na Vercel com MongoDB Atlas | Publicada; atualização vinculada à branch de produção |
-| Testes com Postman e Playwright | Planejados; ainda sem coleção ou configuração no repositório |
+- Cadastro, login e edição dos dados pessoais, com data de nascimento e opções inclusivas de gênero.
+- Solicitação de consultas e envio da preparação com motivo, sintomas, dúvidas e medicamentos em uso.
+- Consulta ao histórico, aos horários confirmados e às orientações do médico.
+- Solicitação de remarcação e resposta às propostas de reagendamento do profissional.
+- Registro de acompanhamentos após o atendimento.
 
-As páginas **Minhas consultas** e **Agenda** carregam dados de `/api/bootstrap`. Os painéis iniciais mostram contadores, próximas consultas e solicitações pendentes. A interface atualiza os dados após as ações, ao retornar à janela e a cada 30 segundos enquanto a área clínica está ativa e a aba está visível.
+### Médicos
 
-Os componentes clínicos e o design da área interna foram recuperados de uma versão anterior do MedTrack e adaptados à autenticação, ao cadastro e à navegação atuais. A homepage pública foi preservada. Foram feitas conferências de interface com dados fictícios em memória; isso não substitui a validação ponta a ponta com o back-end e o Atlas.
+- Cadastro profissional com especialidade, CRM e UF.
+- Agenda mensal com identificação dos dias com consultas.
+- Análise das solicitações, definição de horários, conclusão e cancelamento de consultas.
+- Proposta de reagendamento com confirmação pelo paciente.
+- Acesso aos resumos dos pacientes vinculados e registro de orientações.
 
-A interface foi construída com layouts responsivos, mas a validação completa de usabilidade ainda está pendente.
+### Administração
 
-## Perfis de acesso
+- Listagem de usuários e edição de nome e e-mail.
+- Acesso administrativo às áreas de paciente e médico.
+- Autorizações verificadas pela API conforme o perfil e o vínculo com os registros.
 
-- **Paciente (`patient`):** possui área própria e edição de cadastro. As rotas clínicas permitem solicitar consultas, enviar preparação e registrar acompanhamentos, conforme suas permissões e vínculos.
-- **Médico (`doctor`):** possui área própria e cadastro profissional. As rotas clínicas permitem administrar consultas vinculadas, consultar resumos e registrar orientações.
-- **Administrador (`admin`):** pode acessar as duas áreas e gerenciar nome/e-mail dos usuários. O back-end também permite acesso administrativo aos registros clínicos, mantendo as regras de status das consultas.
+A interface inclui homepage pública, navegação responsiva, busca textual de consultas e pacientes e atualização periódica dos dados clínicos.
 
-Somente contas com perfil `doctor` aparecem na seleção de profissionais e podem receber novas solicitações como médico. Administradores mantêm suas permissões de gestão, mas não são listados como profissionais.
+## Reagendamento com confirmação
 
-O cadastro público permite apenas paciente e médico. O perfil administrativo não é oferecido no formulário e não existe um comando de promoção no repositório atual.
+O médico pode propor um novo horário em **Agenda → Detalhes → Reagendar consulta**. O paciente recebe um aviso no aplicativo e escolhe aceitar ou recusar.
 
-Data de nascimento e gênero são opcionais. Gênero inclui autodescrição e a opção de não informar. Especialidade e CRM/UF também são opcionais; quando informado, o número do CRM deve vir acompanhado da UF. A validação desses campos verifica o formato e não consulta o conselho profissional nem aprova automaticamente o registro médico.
+O horário confirmado é mantido até o aceite. Se o paciente recusar, a consulta permanece no horário anterior. O novo horário é validado novamente na confirmação, impedindo duas consultas aceitas para o mesmo médico, dia e hora. Enquanto houver proposta pendente, o sistema aguarda a resposta antes de permitir outra remarcação ou a conclusão do atendimento.
 
-## Tecnologias
+Os avisos são exibidos dentro do MedTrack. Os dados são atualizados após as operações, ao retornar à janela e a cada 30 segundos enquanto a área clínica estiver ativa e visível.
+
+## Tecnologias e arquitetura
 
 | Camada | Tecnologias |
 | --- | --- |
-| Interface | React, JavaScript, HTML, React Router, React Bootstrap, Bootstrap e Sass |
-| Comunicação HTTP | Axios |
-| API | Node.js e Express |
-| Persistência | MongoDB Atlas e Mongoose |
-| Autenticação | Cookies HTTP-only, sessões no banco e hash de senha com `scrypt` |
-| Hospedagem | Vercel Services: front-end e API no mesmo projeto |
-| Teste existente | `node:test` e `node:assert` |
-
-## Arquitetura
+| Frontend | React, Vite, React Router, Bootstrap, React Bootstrap e Sass |
+| Comunicação | Axios, HTTP e JSON |
+| Backend | Node.js e Express |
+| Banco de dados | MongoDB Atlas e Mongoose |
+| Autenticação | Sessões persistidas no banco, cookies HTTP-only e hash de senha com `scrypt` |
+| Testes | Postman, Playwright e executor nativo `node:test` |
+| Hospedagem | Vercel, com serviços de frontend e API |
 
 ```mermaid
 flowchart LR
-    P["Paciente, médico ou administrador"] --> F["React + Bootstrap"]
-    F <-->|"HTTP / JSON e cookie de sessão"| API["Node.js + Express"]
-    API <-->|"Mongoose"| DB[("MongoDB Atlas")]
+    U[Paciente, médico ou administrador] --> F[Frontend React]
+    F <-->|HTTP e cookie de sessão| A[API Express]
+    A <-->|Mongoose| D[(MongoDB)]
 ```
 
-O navegador se comunica com a API. A conexão com o MongoDB é feita somente no back-end; a senha do banco não deve ser incluída em variáveis com prefixo `VITE_`.
+O frontend acessa a API; somente o backend estabelece a conexão com o banco. Em desenvolvimento, o Vite encaminha `/api` para a porta 3000. Na hospedagem, o roteamento dos serviços é definido em [`vercel.json`](vercel.json).
 
-Em desenvolvimento, o Vite encaminha `/api` para `http://127.0.0.1:3000`. Na Vercel, o arquivo `vercel.json` direciona `/api/*` para o serviço Express e os demais endereços para o front-end.
+### Dados e permissões
 
-## Modelo de dados atual
+As coleções `users`, `sessions`, `appointments`, `followups` e `guidances` armazenam usuários, sessões, consultas, acompanhamentos e orientações. A preparação e a proposta de reagendamento são subdocumentos da consulta. Os modelos e índices estão em [`backend/src/models.js`](backend/src/models.js).
 
-O projeto utiliza documentos e referências por `ObjectId`, e não tabelas MySQL separadas por perfil.
+O cadastro público permite os perfis `patient` e `doctor`. O perfil `admin` possui acesso administrativo e não aparece como profissional disponível para receber consultas.
 
-| Coleção | Conteúdo principal |
-| --- | --- |
-| `users` | Nome, e-mail, hash da senha, perfil, nascimento, gênero, especialidade e CRM/UF |
-| `sessions` | Hash do token de sessão, referência ao usuário e data de expiração |
-| `appointments` | Referências ao paciente e médico, status, horário, remarcação e preparação embutida em `prep` |
-| `followups` | Registros de acompanhamento vinculados ao paciente |
-| `guidances` | Orientações, medicamentos e retorno, com referências ao paciente e médico |
+Data de nascimento, gênero e especialidade são opcionais. Quando informado, o CRM exige a UF correspondente. Essa validação confere o formato dos campos; não realiza verificação no conselho profissional.
 
-```mermaid
-flowchart LR
-    S["sessions"] -->|"userId"| U["users"]
-    A["appointments"] -->|"patientId / doctorId"| U
-    A --- P["prep: motivo, sintomas, dúvidas e medicamentos"]
-    F["followups"] -->|"patientId"| U
-    G["guidances"] -->|"patientId / doctorId"| U
-```
-
-`prep` é um subdocumento da consulta, não uma coleção independente. Os modelos e índices estão em [`backend/src/models.js`](backend/src/models.js).
-
-Os status das consultas são `Solicitada`, `Aceito`, `Remarcação solicitada`, `Concluída` e `Cancelada`. O banco possui um índice único para impedir duas consultas aceitas com o mesmo médico, dia e horário.
-
-### Reagendamento proposto pelo médico
-
-Em uma consulta aceita, o médico pode abrir **Detalhes → Reagendar consulta** e propor
-outra data e hora, com motivo opcional. O paciente recebe um aviso dentro do MedTrack,
-abre **Ver reagendamento** e escolhe **Aceitar novo horário** ou **Recusar reagendamento**.
-O médico também vê o resultado no aplicativo. Os avisos são carregados junto das consultas,
-ao abrir a área, atualizar, voltar à janela ou na atualização automática de 30 segundos;
-não há envio de e-mail, WhatsApp ou push.
-
-O horário confirmado permanece reservado até o aceite. A proposta fica em
-`rescheduleProposal`, sem criar um novo status da consulta. Na recusa, o horário é mantido.
-A proposta não reserva o novo horário: se ele for ocupado antes do aceite, a API retorna 409
-e o paciente pode recusar para que o médico envie outra opção.
-Enquanto houver uma proposta pendente, não é permitido concluir a consulta ou abrir outra
-remarcação; ainda é possível cancelá-la. Cada proposta tem um ID, e a resposta é atômica,
-impedindo que uma resposta repetida ou antiga sobrescreva o horário.
-
-- `POST /api/appointments/:id/reschedule`: médico vinculado ou admin envia `{ date, time, note }`.
-- `PATCH /api/appointments/:id/reschedule`: paciente vinculado ou admin responde
-  `{ proposalId, decision: "accept" | "reject" }`.
-
-O teste `backend/test/reschedule.test.js` cobre permissões, recusa, aceite, conflitos de
-horário, proposta antiga, resposta concorrente e cancelamento. Execute com `MONGODB_URI_TEST`
-apontando exclusivamente para um banco `medtrack_test`, usando `npm test` dentro de backend.
-
-
-## Estrutura do projeto
+## Estrutura do repositório
 
 ```text
 MedTrack/
 ├── backend/
-│   ├── src/
-│   │   ├── app.js          # Rotas, autenticação e autorização
-│   │   ├── database.js     # Conexão compartilhada com MongoDB
-│   │   ├── models.js       # Documentos, referências e índices
-│   │   ├── helpers.js      # Validações e conversões
-│   │   ├── profile.js      # Validação dos campos de perfil
-│   │   ├── permissions.js  # Permissões dos perfis
-│   │   └── server.js       # Inicialização do servidor local
-│   ├── test/flow.test.js
-│   ├── .env.example
-│   ├── package.json
-│   └── package-lock.json
+│   ├── src/                   # API, autenticação, regras e modelos
+│   ├── test/                  # Testes de integração
+│   └── .env.example
 ├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── layouts/
-│   │   ├── pages/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── styles/
-│   ├── public/
-│   ├── .env.example
-│   └── package.json
-├── .gitignore
+│   ├── src/                   # Páginas, componentes e serviços
+│   ├── tests/example.spec.js  # Suíte executável do Playwright
+│   ├── playwright.config.js
+│   └── .env.example
+├── medtrack-tests/
+│   ├── MedTrack-Postman.json
+│   └── MedTrack-Playwright.spec.js
 ├── vercel.json
 └── README.md
 ```
 
-## Executando localmente
+## Executar localmente
 
 ### Pré-requisitos
 
-- Node.js **22.13.0 ou superior**, conforme `backend/package.json`, e npm.
-- Acesso ao MongoDB Atlas ou uma instância local do MongoDB em execução.
-- Para Atlas: usuário do banco com as permissões necessárias e IP da máquina autorizado na lista de acesso.
+- Node.js 22.13.0 ou superior e npm.
+- MongoDB local em execução ou acesso a um cluster MongoDB Atlas.
+- No Atlas, usuário do banco configurado e IP da máquina autorizado.
 
-### Obter o projeto
+Clone o repositório:
 
 ```bash
-git clone https://github.com/gabrmascarenhas/MedTrack.git MedTrack
+git clone https://github.com/gabrmascarenhas/MedTrack.git
 cd MedTrack
 ```
 
-### Back-end — primeiro terminal
+### Backend
+
+No primeiro terminal:
 
 ```bash
 cd backend
 npm ci
 ```
 
-Na primeira configuração, copie `.env.example` para `.env`. **Não substitua seu `.env` se ele já estiver configurado.**
-
-Ajuste a variável `MONGODB_URI` no `.env` para seu banco. O exemplo usa MongoDB local:
+Na primeira configuração, copie `.env.example` para `.env`. Preserve o arquivo se ele já estiver configurado. Ajuste a conexão com seu banco:
 
 ```dotenv
 MONGODB_URI=mongodb://127.0.0.1:27017/medtrack
@@ -189,30 +122,24 @@ HOST=127.0.0.1
 NODE_ENV=development
 ```
 
-Para Atlas, substitua somente a conexão usando seus próprios dados:
-
-```dotenv
-MONGODB_URI=mongodb+srv://USUARIO:SENHA@SEU_CLUSTER.mongodb.net/medtrack
-```
-
-Inicie a API:
+Para utilizar o Atlas, substitua `MONGODB_URI` pela conexão do seu cluster, incluindo o nome do banco. Inicie a API:
 
 ```bash
 npm run server
 ```
 
-A API estará em `http://127.0.0.1:3000`. A rota `/api/health` retorna `{"ok":true,"db":"mongodb"}` quando a conexão necessária é estabelecida. Para reiniciar automaticamente ao alterar arquivos, existe também `npm run dev`.
+A API estará em `http://127.0.0.1:3000`. A rota `GET /api/health` retorna `{"ok":true,"db":"mongodb"}` quando a conexão com o banco está disponível. Use `npm run dev` para reiniciar automaticamente após alterações no backend.
 
-### Front-end — segundo terminal
+### Frontend
 
-A partir da raiz do repositório:
+No segundo terminal, a partir da raiz do repositório:
 
 ```bash
 cd frontend
 npm ci --include=dev
 ```
 
-Na primeira configuração, copie `.env.example` para `.env`, preservando arquivos já configurados. Para usar a API real:
+Na primeira configuração, copie `.env.example` para `.env`, preservando configurações existentes. Para utilizar a API real:
 
 ```dotenv
 VITE_API_URL=/api
@@ -225,88 +152,67 @@ Inicie a interface:
 npm run dev
 ```
 
-Abra `http://127.0.0.1:5173`. Mantenha os dois terminais abertos enquanto estiver usando o sistema local.
+Acesse `http://127.0.0.1:5173` e mantenha os dois servidores em execução. Após alterar o `.env` do frontend, reinicie o Vite.
 
-### Comandos úteis
+## Testes
 
-| Pasta | Comando | Finalidade |
-| --- | --- | --- |
-| `backend` | `npm run server` | Iniciar a API local |
-| `backend` | `npm run dev` | Iniciar a API com reinício automático |
-| `backend` | `npm test` | Executar o teste existente, se o banco de testes estiver configurado |
-| `frontend` | `npm run dev` | Iniciar o Vite |
-| `frontend` | `npm run build` | Compilar o front-end em `dist` |
-| `frontend` | `npm run preview` | Visualizar a compilação; não inicia a API nem substitui o proxy de desenvolvimento |
+Os arquivos para consulta estão reunidos em [`medtrack-tests`](medtrack-tests/). As suítes cobrem fluxos de autenticação, permissões, cadastro, consultas e reagendamento, incluindo aceite e recusa pelo paciente.
 
-### Modo de demonstração local
+### Postman
 
-`VITE_USE_MOCK=true` ativa a autenticação simulada para os perfis de paciente e médico. Os botões de acesso demo usam os dados fictícios de `frontend/src/services/mock/db.js`; essas contas não são criadas automaticamente no Atlas.
+Importe [`MedTrack-Postman.json`](medtrack-tests/MedTrack-Postman.json) e configure `baseUrl` como `http://127.0.0.1:3000/api` no ambiente local.
 
-Esse modo serve para explorar a interface e não comprova integração com o banco ou funcionamento das rotas clínicas. O modo padrão dos arquivos de exemplo é a API real (`false`). Reinicie o Vite depois de alterar o `.env`.
+As requisições manuais de login usam `qaEmailPaciente`, `qaSenhaPaciente`, `qaEmailMedico`, `qaSenhaMedico`, `qaEmailAdmin` e `qaSenhaAdmin`. Preencha essas variáveis somente no seu ambiente do Postman. Execute os cenários na ordem, pois as requisições compartilham IDs e sessões.
 
-## Testes e validação
+### Playwright
 
-Existe um teste de integração em [`backend/test/flow.test.js`](backend/test/flow.test.js), usando o executor nativo do Node.js. Ele cobre um fluxo de paciente, médico, consulta, remarcação, orientação e acompanhamento diretamente na API.
+O arquivo executável está em [`frontend/tests/example.spec.js`](frontend/tests/example.spec.js). A versão em `medtrack-tests` é uma cópia para consulta.
 
-Para executá-lo, disponibilize um banco isolado chamado **`medtrack_test`**, configure `MONGODB_URI_TEST` no ambiente do terminal e rode `npm test` na pasta `backend`.
+Com frontend e backend locais ligados, execute dentro de `frontend`:
 
-Exemplo para MongoDB local:
+```bash
+npx playwright install
+npx playwright test example.spec.js --project=chromium --headed --workers=1
+```
+
+A suíte reúne dez cenários de interface. Para abrir o relatório da execução:
+
+```bash
+npx playwright show-report
+```
+
+### Integração da API
+
+Os testes [`flow.test.js`](backend/test/flow.test.js) e [`reschedule.test.js`](backend/test/reschedule.test.js) verificam o fluxo de consultas e as regras de reagendamento, incluindo autorização, conflitos de horário e respostas concorrentes.
+
+Dentro de `backend`, configure um banco separado chamado `medtrack_test`:
 
 ```bash
 MONGODB_URI_TEST='mongodb://127.0.0.1:27017/medtrack_test' npm test
 ```
 
-Sem `MONGODB_URI_TEST`, esse teste é ignorado. Sua presença no repositório não significa que ele tenha sido executado com sucesso. Não use o banco da demonstração publicada para testes automatizados.
-
-A coleção Postman, os testes de navegador com Playwright e o registro de evidências de usabilidade ainda precisam ser preparados.
+Sem essa variável, os testes de integração são ignorados. Os testes de Postman e Playwright criam dados fictícios no banco utilizado pela API; para novas rodadas, utilize uma instância conectada a um banco de testes separado.
 
 ## Publicação
 
-O projeto está configurado e publicado na Vercel, com persistência no MongoDB Atlas.
+O MedTrack está configurado para publicação na Vercel a partir da raiz do repositório, com os serviços `web` e `api` declarados em `vercel.json`. As atualizações da branch de produção conectada ao projeto geram novos deployments.
 
-- Importe a **raiz do repositório**, mantendo os serviços `web` e `api` declarados em `vercel.json`.
-- Configure `MONGODB_URI` somente no ambiente do servidor e `APP_ORIGIN` com a origem pública do site.
-- A instalação do front-end usa `npm ci --include=dev`, pois Vite e Sass são necessários durante a compilação, mesmo com `NODE_ENV=production`.
-- Os pushes para a branch de produção conectada à Vercel geram novos deploys.
-- O site publicado não depende de terminais locais abertos.
+As variáveis do servidor incluem `MONGODB_URI` e `APP_ORIGIN`, correspondente à origem pública do site. O frontend utiliza `VITE_API_URL=/api` e `VITE_USE_MOCK=false`. A instalação do frontend inclui as dependências de desenvolvimento necessárias à compilação.
 
-## Trabalho em equipe
-
-Front-end e back-end ficam no mesmo repositório. Cada integrante mantém seus próprios arquivos `.env`, que são ignorados pelo Git. Somente `.env.example`, sem credenciais reais, é compartilhado.
-
-As dependências são recuperadas por `npm ci`, a partir dos arquivos `package.json` e `package-lock.json`. As pastas `node_modules` e `dist` não devem ser versionadas.
-
-## Próximas entregas
-
-- Validar ponta a ponta as telas clínicas integradas, incluindo criação, edição, remarcação, cancelamento, exclusão, orientações e acompanhamento.
-- Conferir as permissões de paciente, médico e administrador e os estados de erro, conflito e carregamento.
-- Implementar pesquisa e filtros por médico, data, status e perfil, conforme a tela.
-- Preparar e executar testes de API, de navegador e de usabilidade, registrando resultados e problemas encontrados.
-- Atualizar os requisitos, casos de uso, modelo de dados, wireframes, cronograma e relatório para refletir a implementação entregue.
+Credenciais devem permanecer nas variáveis de ambiente. Os arquivos `.env`, as dependências instaladas e os artefatos de compilação são ignorados pelo Git. Variáveis com prefixo `VITE_` são públicas no navegador e não devem conter senhas ou chaves privadas.
 
 ## Equipe
 
-| Integrante | Papel |
+| Integrante | Responsabilidade |
 | --- | --- |
-| Gabriel Meneses | Gerente de Projeto |
-| Yuri Freitas | Design / UX-UI |
-| Pedro Átila | Front-end |
-| Fernando José | Back-end |
-| Gabriel Mascarenhas | QA / Análise de Testes |
+| Gabriel Meneses | Gerenciamento do projeto |
+| Yuri Freitas | Design e UX/UI |
+| Pedro Átila | Frontend |
+| Fernando José | Backend |
+| Gabriel Mascarenhas | QA e análise de testes |
 
+## Contexto acadêmico
 
-## Acesso rápido aos testes
+Projeto concluído para a disciplina de Desenvolvimento Web do curso de Ciência da Computação da Universidade de Fortaleza — UNIFOR.
 
-Os arquivos estão reunidos na pasta [`medtrack-tests`](medtrack-tests/):
-
-- [MedTrack-Postman.json](medtrack-tests/MedTrack-Postman.json): coleção para importar no Postman.
-- [MedTrack-Playwright.spec.js](medtrack-tests/MedTrack-Playwright.spec.js): cópia dos testes de navegador para consulta.
-
-A versão executável do Playwright permanece em `frontend/tests/example.spec.js`.
-Dentro de `frontend`, execute `npx playwright test example.spec.js --project=chromium --workers=1`,
-com a API e o frontend locais ligados. Os testes criam dados fictícios no banco configurado.
-
-No Postman, configure `baseUrl` como `http://127.0.0.1:3000/api` no seu ambiente local.
-Os logins manuais usam as variáveis `qaEmailPaciente`, `qaSenhaPaciente`, `qaEmailMedico`,
-`qaSenhaMedico`, `qaEmailAdmin` e `qaSenhaAdmin`. Preencha credenciais somente localmente.
-Os cenários automatizados devem ser executados na ordem para preparar IDs e sessões.
+O MedTrack organiza informações relacionadas ao atendimento. Não realiza diagnósticos, não prescreve tratamentos e não substitui a avaliação de um profissional de saúde.
