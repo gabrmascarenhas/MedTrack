@@ -855,3 +855,78 @@
     scroll-behavior: smooth;
   }
 }
+
+// Guia público de uso por perfil.
+.home-guide {
+  scroll-margin-top: 2rem;
+}
+.home-guide__profiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+.home-guide__profiles button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid $color-border;
+  border-radius: 0.65rem;
+  background: white;
+  color: $color-text-secondary;
+  font: inherit;
+  font-weight: 600;
+}
+.home-guide__profiles button[aria-pressed='true'] {
+  background: $color-primary;
+  border-color: $color-primary;
+  color: white;
+}
+.home-guide__profiles button:focus-visible,
+.home-guide__help summary:focus-visible {
+  outline: 3px solid $color-primary;
+  outline-offset: 4px;
+}
+.home-guide__content {
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  border: 1px solid $color-border;
+  border-radius: 1rem;
+  background: white;
+}
+.home-guide__content > p,
+.home-guide__steps p,
+.home-guide__help p {
+  color: $color-text-secondary;
+  line-height: 1.7;
+  max-width: 65ch;
+}
+.home-guide__steps {
+  padding-left: 1.5rem;
+  margin-block: 1.75rem;
+}
+.home-guide__steps li {
+  padding-left: 0.5rem;
+  margin-bottom: 1.35rem;
+}
+.home-guide__steps li::marker {
+  color: $color-primary;
+  font-weight: 700;
+}
+.home-guide__steps h4 {
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+.home-guide__steps p {
+  margin-bottom: 0;
+}
+.home-guide__help {
+  margin-top: 1.5rem;
+}
+.home-guide__help summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.home-guide__help p {
+  margin-top: 1rem;
+}

@@ -50,6 +50,37 @@ const stages = [
     note: 'Uma visão do caminho que queremos construir.',
   },
 ];
+const userGuides = {
+  patient: {
+    label: 'Sou paciente',
+    title: 'Da primeira conta ao acompanhamento',
+    intro: 'Use sua área para preparar a consulta, acompanhar o pedido e consultar as orientações recebidas.',
+    steps: [
+      ['Crie sua conta de paciente', 'Selecione “Sou paciente”, cadastre seus dados e entre com e-mail e senha. Em “Meu cadastro”, você pode atualizar suas informações.'],
+      ['Solicite uma consulta', 'Na área do paciente, abra “Minhas consultas” e selecione “Solicitar consulta”. Escolha o médico e preencha o motivo e a preparação solicitada no formulário.'],
+      ['Organize suas informações', 'Em “Preparação pré-consulta”, consulte o que enviou. Use “Editar resumo” para atualizar a preparação de uma consulta em andamento. “Resumos” reúne as informações salvas.'],
+      ['Acompanhe o pedido', 'Volte a “Minhas consultas” para verificar o status. O médico avalia a solicitação e define a data e o horário ao aceitar o atendimento.'],
+      ['Consulte o pós-consulta', 'Abra “Pós-consulta” para consultar as orientações registradas pelo médico e registrar seu acompanhamento.'],
+    ],
+    cta: 'Criar conta de paciente',
+    url: '/cadastro?perfil=patient',
+  },
+  doctor: {
+    label: 'Sou médico',
+    title: 'Organize a agenda e acompanhe seus pacientes',
+    intro: 'Use sua área profissional para avaliar as solicitações, consultar o contexto do paciente e registrar orientações.',
+    steps: [
+      ['Cadastre seu perfil profissional', 'Selecione “Sou médico parceiro” e informe os dados profissionais, como especialidade, CRM e UF. Depois, entre com e-mail e senha. Atualize os dados em “Meu cadastro”.'],
+      ['Confira sua agenda', 'Na área do médico, abra “Agenda” para consultar as solicitações e os atendimentos. Verifique o motivo e a preparação enviados pelo paciente.'],
+      ['Avalie a solicitação', 'Analise o pedido e, ao aceitá-lo, escolha uma data e um horário disponíveis. O paciente acompanha a definição em sua área de consultas.'],
+      ['Consulte as informações do paciente', 'Abra “Pacientes” para localizar os pacientes vinculados aos atendimentos e consultar a preparação antes da conversa.'],
+      ['Registre as orientações', 'Em “Orientações médicas”, selecione o paciente vinculado e salve as orientações. O paciente poderá consultá-las no acompanhamento pós-consulta.'],
+    ],
+    cta: 'Criar conta de médico',
+    url: '/cadastro?perfil=doctor',
+  },
+};
+
 const questions = [
   [
     'O que é o MedTrack?',
@@ -116,10 +147,12 @@ function JourneyPreview({ stage }) {
 export default function Home() {
   const { user } = useAuth();
   const [active, setActive] = useState(0);
+  const [guideProfile, setGuideProfile] = useState('patient');
   useEffect(() => {
     document.title = 'MedTrack';
   }, []);
   const stage = stages[active];
+  const guide = userGuides[guideProfile];
   return (
     <div className="home-page">
       <section className="home-hero home-container" aria-labelledby="home-title">
@@ -197,6 +230,52 @@ export default function Home() {
           </span>
         </div>
       </div>
+
+
+      <section id="guia" className="home-guide home-container home-section" aria-labelledby="guide-title">
+        <div className="home-section-heading">
+          <span className="home-eyebrow">GUIA DE USO</span>
+          <h2 id="guide-title">Como usar o MedTrack</h2>
+          <p>Escolha seu perfil para acompanhar o passo a passo, do cadastro ao pós-consulta.</p>
+        </div>
+        <div className="home-guide__profiles" role="group" aria-label="Escolha seu perfil no guia">
+          {Object.entries(userGuides).map(([profile, item]) => (
+            <button
+              key={profile}
+              type="button"
+              aria-pressed={guideProfile === profile}
+              aria-controls="guide-content"
+              onClick={() => setGuideProfile(profile)}
+            >
+              {profile === 'patient' ? <UserRound size={20} aria-hidden="true" /> : <Stethoscope size={20} aria-hidden="true" />}
+              {item.label}
+            </button>
+          ))}
+        </div>
+        <div id="guide-content" className="home-guide__content">
+          <h3>{guide.title}</h3>
+          <p>{guide.intro}</p>
+          <ol className="home-guide__steps">
+            {guide.steps.map(([title, text]) => (
+              <li key={title}>
+                <h4>{title}</h4>
+                <p>{text}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="home-actions">
+            <Link className="btn btn-primary home-button" to={user ? homeFor(user) : guide.url}>
+              {user ? 'Acessar minha área' : guide.cta}
+              <ArrowRight size={18} aria-hidden="true" />
+            </Link>
+            {!user && <Link className="home-text-link" to="/login">Já tenho conta</Link>}
+          </div>
+        </div>
+        <details className="home-guide__help">
+          <summary>Não encontrou suas informações ou não consegue entrar?</summary>
+          <p>Confira o e-mail e a senha usados no cadastro. Depois de entrar, verifique se a área corresponde ao seu perfil. As consultas e preparações aparecem quando há uma solicitação vinculada à sua conta. Para acessar o outro perfil, saia e entre com a conta correspondente.</p>
+        </details>
+      </section>
 
       <section
         id="como-funciona"

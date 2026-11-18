@@ -47,6 +47,9 @@ export default function PublicLayout() {
             className={`public-header__nav${menuOpen ? ' is-open' : ''}`}
             aria-label="Navegação principal"
           >
+            <Link to="/#guia" onClick={closeMenu}>
+              Guia
+            </Link>
             <Link to="/#como-funciona" onClick={closeMenu}>
               Como funciona
             </Link>
